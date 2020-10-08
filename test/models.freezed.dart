@@ -12,6 +12,7 @@ City _$CityFromJson(Map<String, dynamic> json) {
   return _City.fromJson(json);
 }
 
+/// @nodoc
 class _$CityTearOff {
   const _$CityTearOff();
 
@@ -22,11 +23,18 @@ class _$CityTearOff {
       name: name,
     );
   }
+
+// ignore: unused_element
+  City fromJson(Map<String, Object> json) {
+    return City.fromJson(json);
+  }
 }
 
+/// @nodoc
 // ignore: unused_element
 const $City = _$CityTearOff();
 
+/// @nodoc
 mixin _$City {
   String get id;
   String get name;
@@ -35,12 +43,14 @@ mixin _$City {
   $CityCopyWith<City> get copyWith;
 }
 
+/// @nodoc
 abstract class $CityCopyWith<$Res> {
   factory $CityCopyWith(City value, $Res Function(City) then) =
       _$CityCopyWithImpl<$Res>;
   $Res call({String id, String name});
 }
 
+/// @nodoc
 class _$CityCopyWithImpl<$Res> implements $CityCopyWith<$Res> {
   _$CityCopyWithImpl(this._value, this._then);
 
@@ -60,6 +70,7 @@ class _$CityCopyWithImpl<$Res> implements $CityCopyWith<$Res> {
   }
 }
 
+/// @nodoc
 abstract class _$CityCopyWith<$Res> implements $CityCopyWith<$Res> {
   factory _$CityCopyWith(_City value, $Res Function(_City) then) =
       __$CityCopyWithImpl<$Res>;
@@ -67,6 +78,7 @@ abstract class _$CityCopyWith<$Res> implements $CityCopyWith<$Res> {
   $Res call({String id, String name});
 }
 
+/// @nodoc
 class __$CityCopyWithImpl<$Res> extends _$CityCopyWithImpl<$Res>
     implements _$CityCopyWith<$Res> {
   __$CityCopyWithImpl(_City _value, $Res Function(_City) _then)
@@ -88,6 +100,8 @@ class __$CityCopyWithImpl<$Res> extends _$CityCopyWithImpl<$Res>
 }
 
 @JsonSerializable()
+
+/// @nodoc
 class _$_City extends _City {
   _$_City({this.id, this.name}) : super._();
 
@@ -148,6 +162,7 @@ Company _$CompanyFromJson(Map<String, dynamic> json) {
   return _Company.fromJson(json);
 }
 
+/// @nodoc
 class _$CompanyTearOff {
   const _$CompanyTearOff();
 
@@ -166,11 +181,18 @@ class _$CompanyTearOff {
       models: models,
     );
   }
+
+// ignore: unused_element
+  Company fromJson(Map<String, Object> json) {
+    return Company.fromJson(json);
+  }
 }
 
+/// @nodoc
 // ignore: unused_element
 const $Company = _$CompanyTearOff();
 
+/// @nodoc
 mixin _$Company {
   String get id;
   String get name;
@@ -182,6 +204,7 @@ mixin _$Company {
   $CompanyCopyWith<Company> get copyWith;
 }
 
+/// @nodoc
 abstract class $CompanyCopyWith<$Res> {
   factory $CompanyCopyWith(Company value, $Res Function(Company) then) =
       _$CompanyCopyWithImpl<$Res>;
@@ -193,6 +216,7 @@ abstract class $CompanyCopyWith<$Res> {
       HasMany<Model> models});
 }
 
+/// @nodoc
 class _$CompanyCopyWithImpl<$Res> implements $CompanyCopyWith<$Res> {
   _$CompanyCopyWithImpl(this._value, this._then);
 
@@ -219,6 +243,7 @@ class _$CompanyCopyWithImpl<$Res> implements $CompanyCopyWith<$Res> {
   }
 }
 
+/// @nodoc
 abstract class _$CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
   factory _$CompanyCopyWith(_Company value, $Res Function(_Company) then) =
       __$CompanyCopyWithImpl<$Res>;
@@ -231,6 +256,7 @@ abstract class _$CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
       HasMany<Model> models});
 }
 
+/// @nodoc
 class __$CompanyCopyWithImpl<$Res> extends _$CompanyCopyWithImpl<$Res>
     implements _$CompanyCopyWith<$Res> {
   __$CompanyCopyWithImpl(_Company _value, $Res Function(_Company) _then)
@@ -259,6 +285,8 @@ class __$CompanyCopyWithImpl<$Res> extends _$CompanyCopyWithImpl<$Res>
 }
 
 @JsonSerializable()
+
+/// @nodoc
 class _$_Company extends _Company {
   _$_Company({this.id, this.name, this.nasdaq, this.updatedAt, this.models})
       : super._();

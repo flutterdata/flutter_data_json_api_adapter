@@ -37,7 +37,7 @@ class CompanyLocalAdapterMock extends _CompanyLocalAdapterMock
 }
 
 void main() async {
-  ProviderStateOwner owner;
+  ProviderContainer container;
 
   final cityLocalAdapter = CityLocalAdapterMock();
   final companyLocalAdapter = CompanyLocalAdapterMock();
@@ -49,30 +49,31 @@ void main() async {
   Map<String, RemoteAdapter<DataModel>> adapters;
 
   setUp(() async {
-    owner = ProviderStateOwner(
+    container = ProviderContainer(
       overrides: [
         companyLocalAdapterProvider
-            .overrideAs(Provider((_) => companyLocalAdapter)),
+            .overrideWithProvider(Provider((_) => companyLocalAdapter)),
         modelLocalAdapterProvider
-            .overrideAs(Provider((_) => modelLocalAdapter)),
-        cityLocalAdapterProvider.overrideAs(Provider((_) => cityLocalAdapter)),
+            .overrideWithProvider(Provider((_) => modelLocalAdapter)),
+        cityLocalAdapterProvider
+            .overrideWithProvider(Provider((_) => cityLocalAdapter)),
       ],
     );
 
     adapters = {
-      'models': modelRemoteAdapterProvider.readOwner(owner),
-      'cities': cityRemoteAdapterProvider.readOwner(owner),
-      'companies': companyRemoteAdapterProvider.readOwner(owner),
+      'models': container.read(modelRemoteAdapterProvider),
+      'cities': container.read(cityRemoteAdapterProvider),
+      'companies': container.read(companyRemoteAdapterProvider),
     };
 
-    modelRemoteAdapter = await modelRemoteAdapterProvider
-        .readOwner(owner)
+    modelRemoteAdapter = await container
+        .read(modelRemoteAdapterProvider)
         .initialize(adapters: adapters);
-    cityRemoteAdapter = await cityRemoteAdapterProvider
-        .readOwner(owner)
+    cityRemoteAdapter = await container
+        .read(cityRemoteAdapterProvider)
         .initialize(adapters: adapters);
-    companyRemoteAdapter = await companyRemoteAdapterProvider
-        .readOwner(owner)
+    companyRemoteAdapter = await container
+        .read(companyRemoteAdapterProvider)
         .initialize(adapters: adapters);
   });
 

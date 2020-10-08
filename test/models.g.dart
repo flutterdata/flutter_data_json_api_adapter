@@ -104,13 +104,23 @@ final modelRemoteAdapterProvider = RiverpodAlias.provider<RemoteAdapter<Model>>(
     (ref) => $ModelRemoteAdapter(ref.read(modelLocalAdapterProvider)));
 
 final modelRepositoryProvider =
-    RiverpodAlias.provider<Repository<Model>>((_) => Repository<Model>());
+    RiverpodAlias.provider<Repository<Model>>((ref) => Repository<Model>(ref));
 
 extension ModelX on Model {
-  Model init(owner) {
-    return internalLocatorFn(modelRepositoryProvider, owner)
-        .internalAdapter
-        .initializeModel(this, save: true) as Model;
+  /// Initializes "fresh" models (i.e. manually instantiated) to use
+  /// [save], [delete] and so on.
+  ///
+  /// Pass:
+  ///  - A `BuildContext` if using Flutter with Riverpod or Provider
+  ///  - Nothing if using Flutter with GetIt
+  ///  - A Riverpod `ProviderContainer` if using pure Dart
+  ///  - Its own [Repository<Model>]
+  Model init(container) {
+    final repository = container is Repository<Model>
+        ? container
+        : internalLocatorFn(modelRepositoryProvider, container);
+    return repository.internalAdapter.initializeModel(this, save: true)
+        as Model;
   }
 }
 
@@ -155,13 +165,22 @@ final cityRemoteAdapterProvider = RiverpodAlias.provider<RemoteAdapter<City>>(
     (ref) => $CityRemoteAdapter(ref.read(cityLocalAdapterProvider)));
 
 final cityRepositoryProvider =
-    RiverpodAlias.provider<Repository<City>>((_) => Repository<City>());
+    RiverpodAlias.provider<Repository<City>>((ref) => Repository<City>(ref));
 
 extension CityX on City {
-  City init(owner) {
-    return internalLocatorFn(cityRepositoryProvider, owner)
-        .internalAdapter
-        .initializeModel(this, save: true) as City;
+  /// Initializes "fresh" models (i.e. manually instantiated) to use
+  /// [save], [delete] and so on.
+  ///
+  /// Pass:
+  ///  - A `BuildContext` if using Flutter with Riverpod or Provider
+  ///  - Nothing if using Flutter with GetIt
+  ///  - A Riverpod `ProviderContainer` if using pure Dart
+  ///  - Its own [Repository<City>]
+  City init(container) {
+    final repository = container is Repository<City>
+        ? container
+        : internalLocatorFn(cityRepositoryProvider, container);
+    return repository.internalAdapter.initializeModel(this, save: true) as City;
   }
 }
 
@@ -215,14 +234,24 @@ final companyRemoteAdapterProvider =
     RiverpodAlias.provider<RemoteAdapter<Company>>(
         (ref) => $CompanyRemoteAdapter(ref.read(companyLocalAdapterProvider)));
 
-final companyRepositoryProvider =
-    RiverpodAlias.provider<Repository<Company>>((_) => Repository<Company>());
+final companyRepositoryProvider = RiverpodAlias.provider<Repository<Company>>(
+    (ref) => Repository<Company>(ref));
 
 extension CompanyX on Company {
-  Company init(owner) {
-    return internalLocatorFn(companyRepositoryProvider, owner)
-        .internalAdapter
-        .initializeModel(this, save: true) as Company;
+  /// Initializes "fresh" models (i.e. manually instantiated) to use
+  /// [save], [delete] and so on.
+  ///
+  /// Pass:
+  ///  - A `BuildContext` if using Flutter with Riverpod or Provider
+  ///  - Nothing if using Flutter with GetIt
+  ///  - A Riverpod `ProviderContainer` if using pure Dart
+  ///  - Its own [Repository<Company>]
+  Company init(container) {
+    final repository = container is Repository<Company>
+        ? container
+        : internalLocatorFn(companyRepositoryProvider, container);
+    return repository.internalAdapter.initializeModel(this, save: true)
+        as Company;
   }
 }
 
