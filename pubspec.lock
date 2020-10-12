@@ -189,11 +189,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.5.4"
-      resolved-ref: "9f80eb422a0acc2c4ebcb7e4aa143e4f90617939"
+      ref: "0.5.5"
+      resolved-ref: "74ba4f8492b8e47953ab91132475e4c80d8819fd"
       url: "https://github.com/flutterdata/flutter_data.git"
     source: git
-    version: "0.5.4"
+    version: "0.5.5"
   freezed:
     dependency: "direct dev"
     description:
@@ -291,7 +291,7 @@ packages:
       name: json_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.2"
+    version: "4.3.0"
   json_serializable:
     dependency: "direct dev"
     description:

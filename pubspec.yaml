@@ -1,6 +1,6 @@
 name: flutter_data_json_api_adapter
 description: JSON:API adapter for Flutter Data
-version: 0.1.2
+version: 0.1.3
 homepage: https://github.com/flutterdata/flutter_data_json_api_adapter
 
 environment:
@@ -10,25 +10,24 @@ dependencies:
   flutter_data:
     git:
       url: https://github.com/flutterdata/flutter_data.git
-      ref: 0.5.4
-  json_api: ^4.2.2
+      ref: 0.5.5
+  json_api: ^4.3.0
 
 # dependency_overrides:
 #   flutter_data:
 #     path: ../flutter_data
-
 dev_dependencies:
-  test: ^1.9.4
-  mockito: ^4.1.1
-  
-  pedantic: ^1.8.0+1
-  freezed: ^0.12.1
-  riverpod: ">=0.11.0 <1.0.0"
+  build_runner: ^1.7.4
 
   build_test: ^0.10.11
-  build_runner: ^1.7.4
-  matcher: ^0.12.6
-  source_gen_test: ^0.1.0
-  json_serializable: ^3.2.5
-  json_annotation: ^3.0.1
+  freezed: ^0.12.1
   hive: ^1.4.1+1
+  json_annotation: ^3.0.1
+  json_serializable: ^3.2.5
+  matcher: ^0.12.6
+  mockito: ^4.1.1
+
+  pedantic: ^1.8.0+1
+  riverpod: ">=0.11.0 <1.0.0"
+  source_gen_test: ^0.1.0
+  test: ^1.9.4
