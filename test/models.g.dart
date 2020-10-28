@@ -96,15 +96,51 @@ class $ModelRemoteAdapter = RemoteAdapter<Model>
 
 //
 
-final modelLocalAdapterProvider = RiverpodAlias.provider<LocalAdapter<Model>>(
-    (ref) => $ModelHiveLocalAdapter(
+final modelLocalAdapterProvider = Provider<LocalAdapter<Model>>((ref) =>
+    $ModelHiveLocalAdapter(
         ref.read(hiveLocalStorageProvider), ref.read(graphProvider)));
 
-final modelRemoteAdapterProvider = RiverpodAlias.provider<RemoteAdapter<Model>>(
+final modelRemoteAdapterProvider = Provider<RemoteAdapter<Model>>(
     (ref) => $ModelRemoteAdapter(ref.read(modelLocalAdapterProvider)));
 
 final modelRepositoryProvider =
-    RiverpodAlias.provider<Repository<Model>>((ref) => Repository<Model>(ref));
+    Provider<Repository<Model>>((ref) => Repository<Model>(ref));
+
+final _watchModel = StateNotifierProvider.autoDispose
+    .family<DataStateNotifier<Model>, WatchArgs<Model>>((ref, args) {
+  return ref.watch(modelRepositoryProvider).watchOne(args.id,
+      remote: args.remote,
+      params: args.params,
+      headers: args.headers,
+      alsoWatch: args.alsoWatch);
+});
+
+AutoDisposeStateNotifierStateProvider<DataState<Model>> watchModel(dynamic id,
+    {bool remote = true,
+    Map<String, dynamic> params = const {},
+    Map<String, String> headers = const {},
+    AlsoWatch<Model> alsoWatch}) {
+  return _watchModel(WatchArgs(
+          id: id,
+          remote: remote,
+          params: params,
+          headers: headers,
+          alsoWatch: alsoWatch))
+      .state;
+}
+
+final _watchModels = StateNotifierProvider.autoDispose
+    .family<DataStateNotifier<List<Model>>, WatchArgs<Model>>((ref, args) {
+  return ref.watch(modelRepositoryProvider).watchAll(
+      remote: args.remote, params: args.params, headers: args.headers);
+});
+
+AutoDisposeStateNotifierStateProvider<DataState<List<Model>>> watchModels(
+    {bool remote, Map<String, dynamic> params, Map<String, String> headers}) {
+  return _watchModels(
+          WatchArgs(remote: remote, params: params, headers: headers))
+      .state;
+}
 
 extension ModelX on Model {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
@@ -157,15 +193,51 @@ class $CityRemoteAdapter = RemoteAdapter<City>
 
 //
 
-final cityLocalAdapterProvider = RiverpodAlias.provider<LocalAdapter<City>>(
-    (ref) => $CityHiveLocalAdapter(
+final cityLocalAdapterProvider = Provider<LocalAdapter<City>>((ref) =>
+    $CityHiveLocalAdapter(
         ref.read(hiveLocalStorageProvider), ref.read(graphProvider)));
 
-final cityRemoteAdapterProvider = RiverpodAlias.provider<RemoteAdapter<City>>(
+final cityRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
     (ref) => $CityRemoteAdapter(ref.read(cityLocalAdapterProvider)));
 
 final cityRepositoryProvider =
-    RiverpodAlias.provider<Repository<City>>((ref) => Repository<City>(ref));
+    Provider<Repository<City>>((ref) => Repository<City>(ref));
+
+final _watchCity = StateNotifierProvider.autoDispose
+    .family<DataStateNotifier<City>, WatchArgs<City>>((ref, args) {
+  return ref.watch(cityRepositoryProvider).watchOne(args.id,
+      remote: args.remote,
+      params: args.params,
+      headers: args.headers,
+      alsoWatch: args.alsoWatch);
+});
+
+AutoDisposeStateNotifierStateProvider<DataState<City>> watchCity(dynamic id,
+    {bool remote = true,
+    Map<String, dynamic> params = const {},
+    Map<String, String> headers = const {},
+    AlsoWatch<City> alsoWatch}) {
+  return _watchCity(WatchArgs(
+          id: id,
+          remote: remote,
+          params: params,
+          headers: headers,
+          alsoWatch: alsoWatch))
+      .state;
+}
+
+final _watchCities = StateNotifierProvider.autoDispose
+    .family<DataStateNotifier<List<City>>, WatchArgs<City>>((ref, args) {
+  return ref.watch(cityRepositoryProvider).watchAll(
+      remote: args.remote, params: args.params, headers: args.headers);
+});
+
+AutoDisposeStateNotifierStateProvider<DataState<List<City>>> watchCities(
+    {bool remote, Map<String, dynamic> params, Map<String, String> headers}) {
+  return _watchCities(
+          WatchArgs(remote: remote, params: params, headers: headers))
+      .state;
+}
 
 extension CityX on City {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
@@ -225,17 +297,52 @@ class $CompanyRemoteAdapter = RemoteAdapter<Company>
 
 //
 
-final companyLocalAdapterProvider =
-    RiverpodAlias.provider<LocalAdapter<Company>>((ref) =>
-        $CompanyHiveLocalAdapter(
-            ref.read(hiveLocalStorageProvider), ref.read(graphProvider)));
+final companyLocalAdapterProvider = Provider<LocalAdapter<Company>>((ref) =>
+    $CompanyHiveLocalAdapter(
+        ref.read(hiveLocalStorageProvider), ref.read(graphProvider)));
 
-final companyRemoteAdapterProvider =
-    RiverpodAlias.provider<RemoteAdapter<Company>>(
-        (ref) => $CompanyRemoteAdapter(ref.read(companyLocalAdapterProvider)));
+final companyRemoteAdapterProvider = Provider<RemoteAdapter<Company>>(
+    (ref) => $CompanyRemoteAdapter(ref.read(companyLocalAdapterProvider)));
 
-final companyRepositoryProvider = RiverpodAlias.provider<Repository<Company>>(
-    (ref) => Repository<Company>(ref));
+final companyRepositoryProvider =
+    Provider<Repository<Company>>((ref) => Repository<Company>(ref));
+
+final _watchCompany = StateNotifierProvider.autoDispose
+    .family<DataStateNotifier<Company>, WatchArgs<Company>>((ref, args) {
+  return ref.watch(companyRepositoryProvider).watchOne(args.id,
+      remote: args.remote,
+      params: args.params,
+      headers: args.headers,
+      alsoWatch: args.alsoWatch);
+});
+
+AutoDisposeStateNotifierStateProvider<DataState<Company>> watchCompany(
+    dynamic id,
+    {bool remote = true,
+    Map<String, dynamic> params = const {},
+    Map<String, String> headers = const {},
+    AlsoWatch<Company> alsoWatch}) {
+  return _watchCompany(WatchArgs(
+          id: id,
+          remote: remote,
+          params: params,
+          headers: headers,
+          alsoWatch: alsoWatch))
+      .state;
+}
+
+final _watchCompanies = StateNotifierProvider.autoDispose
+    .family<DataStateNotifier<List<Company>>, WatchArgs<Company>>((ref, args) {
+  return ref.watch(companyRepositoryProvider).watchAll(
+      remote: args.remote, params: args.params, headers: args.headers);
+});
+
+AutoDisposeStateNotifierStateProvider<DataState<List<Company>>> watchCompanies(
+    {bool remote, Map<String, dynamic> params, Map<String, String> headers}) {
+  return _watchCompanies(
+          WatchArgs(remote: remote, params: params, headers: headers))
+      .state;
+}
 
 extension CompanyX on Company {
   /// Initializes "fresh" models (i.e. manually instantiated) to use

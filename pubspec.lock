@@ -169,6 +169,22 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.6"
+  data_state:
+    dependency: transitive
+    description:
+      path: "packages/data_state"
+      ref: "0.3.6"
+      resolved-ref: "2fa56b43ea2c20708a2814ae05eed6d64365d12a"
+      url: "https://github.com/flutterdata/data_state.git"
+    source: git
+    version: "0.3.6"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.5"
   fixnum:
     dependency: transitive
     description:
@@ -180,11 +196,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.5.7"
-      resolved-ref: "426645faaba212927d162a933d6d43bd8ddc1cd1"
+      ref: "0.5.9"
+      resolved-ref: "8ed09eadac0f266792a7cf59f58e8fb22d38ed33"
       url: "https://github.com/flutterdata/flutter_data.git"
     source: git
-    version: "0.5.7"
+    version: "0.5.9"
   freezed:
     dependency: "direct dev"
     description:
