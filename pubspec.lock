@@ -196,11 +196,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.5.9"
-      resolved-ref: "8ed09eadac0f266792a7cf59f58e8fb22d38ed33"
+      ref: "0.5.12"
+      resolved-ref: bec683e44052ab18ef2740157d33669a5211aefd
       url: "https://github.com/flutterdata/flutter_data.git"
     source: git
-    version: "0.5.9"
+    version: "0.5.12"
   freezed:
     dependency: "direct dev"
     description:
