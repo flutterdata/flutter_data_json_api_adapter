@@ -1,3 +1,8 @@
+## [0.1.7] - 2020-11-11
+
+ - upgrade deps
+ - publish on pub.dev again
+
 ## [0.1.2] - 2020-10-08
 
  - Point to git version of Flutter Data

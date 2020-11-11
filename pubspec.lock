@@ -172,12 +172,10 @@ packages:
   data_state:
     dependency: transitive
     description:
-      path: "packages/data_state"
-      ref: "0.3.6"
-      resolved-ref: "2fa56b43ea2c20708a2814ae05eed6d64365d12a"
-      url: "https://github.com/flutterdata/data_state.git"
-    source: git
-    version: "0.3.6"
+      name: data_state
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.7"
   equatable:
     dependency: transitive
     description:
@@ -195,12 +193,10 @@ packages:
   flutter_data:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "0.5.12"
-      resolved-ref: bec683e44052ab18ef2740157d33669a5211aefd
-      url: "https://github.com/flutterdata/flutter_data.git"
-    source: git
-    version: "0.5.12"
+      name: flutter_data
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.14"
   freezed:
     dependency: "direct dev"
     description:
@@ -209,7 +205,7 @@ packages:
     source: hosted
     version: "0.12.1"
   freezed_annotation:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: freezed_annotation
       url: "https://pub.dartlang.org"
