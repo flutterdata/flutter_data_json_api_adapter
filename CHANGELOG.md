@@ -1,3 +1,7 @@
+## [0.1.8] - 2020-12-06
+
+ - Allow mapping local to remote types
+
 ## [0.1.7] - 2020-11-11
 
  - upgrade deps

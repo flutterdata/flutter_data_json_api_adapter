@@ -1,13 +1,13 @@
 name: flutter_data_json_api_adapter
 description: JSON:API adapter for Flutter Data
-version: 0.1.7
+version: 0.1.8
 homepage: https://github.com/flutterdata/flutter_data_json_api_adapter
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
 
 dependencies:
-  flutter_data: ^0.5.14
+  flutter_data: ^0.5.20
   json_api: ^4.3.0
 
 # dependency_overrides:

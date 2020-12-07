@@ -116,7 +116,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
     if (collectionData?.included != null) {
       for (final include in collectionData.included) {
-        final _type = DataHelpers.getType(include.type);
+        final _type = _localTypeFor(include.type);
         final model = adapters[_type]?.deserialize(include, init: init)?.model;
         result.included.add(model);
       }
@@ -133,18 +133,20 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
           final mapOutKey = fieldForKey(relEntry.key);
 
           if (rel is ToOne && rel.linkage?.id != null) {
-            final key = graph.getKeyForId(rel.linkage.type, rel.linkage.id,
-                keyIfAbsent: DataHelpers.generateKey(rel.linkage.type));
+            final localType = _localTypeFor(rel.linkage.type);
+            final key = graph.getKeyForId(localType, rel.linkage.id,
+                keyIfAbsent: DataHelpers.generateKey(localType));
             mapOut[mapOutKey] = key;
           }
 
           if (rel is ToMany) {
-            mapOut[mapOutKey] = rel.linkage
-                .map((i) => i.id == null
-                    ? null
-                    : graph.getKeyForId(i.type, i.id,
-                        keyIfAbsent: DataHelpers.generateKey(i.type)))
-                .toList();
+            mapOut[mapOutKey] = rel.linkage.map((i) {
+              final localType = _localTypeFor(i.type);
+              return i.id == null
+                  ? null
+                  : graph.getKeyForId(localType, i.id,
+                      keyIfAbsent: DataHelpers.generateKey(localType));
+            }).toList();
           }
         }
         mapOut.addAll(obj.attributes);
@@ -159,9 +161,23 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
     return result;
   }
+
+  String _localTypeFor(String remoteType) {
+    remoteType = DataHelpers.getType(remoteType);
+    final values = localAdapter
+        .relationshipsFor()
+        .values
+        .where((e) => e['remoteType'] == remoteType);
+    if (values.isNotEmpty) {
+      return values.first['type'];
+    }
+    return remoteType;
+  }
 }
 
 extension _MapX on Map<String, dynamic> {
-  Map<String, dynamic> get filterNulls =>
-      {for (final e in entries) if (e.value != null) e.key: e.value};
+  Map<String, dynamic> get filterNulls => {
+        for (final e in entries)
+          if (e.value != null) e.key: e.value
+      };
 }

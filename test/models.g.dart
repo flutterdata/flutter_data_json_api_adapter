@@ -34,6 +34,19 @@ Map<String, dynamic> _$_$_CityToJson(_$_City instance) => <String, dynamic>{
       'name': instance.name,
     };
 
+_$_Employee _$_$_EmployeeFromJson(Map<String, dynamic> json) {
+  return _$_Employee(
+    id: json['id'] as String,
+    name: json['name'] as String,
+  );
+}
+
+Map<String, dynamic> _$_$_EmployeeToJson(_$_Employee instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };
+
 _$_Company _$_$_CompanyFromJson(Map<String, dynamic> json) {
   return _$_Company(
     id: json['id'] as String,
@@ -67,6 +80,7 @@ mixin $ModelLocalAdapter on LocalAdapter<Model> {
   @override
   Map<String, Map<String, Object>> relationshipsFor([Model model]) => {
         'company': {
+          'name': 'company',
           'inverse': 'models',
           'type': 'companies',
           'kind': 'BelongsTo',
@@ -96,9 +110,8 @@ class $ModelRemoteAdapter = RemoteAdapter<Model>
 
 //
 
-final modelLocalAdapterProvider = Provider<LocalAdapter<Model>>((ref) =>
-    $ModelHiveLocalAdapter(
-        ref.read(hiveLocalStorageProvider), ref.read(graphProvider)));
+final modelLocalAdapterProvider =
+    Provider<LocalAdapter<Model>>((ref) => $ModelHiveLocalAdapter(ref));
 
 final modelRemoteAdapterProvider = Provider<RemoteAdapter<Model>>(
     (ref) => $ModelRemoteAdapter(ref.read(modelLocalAdapterProvider)));
@@ -115,31 +128,31 @@ final _watchModel = StateNotifierProvider.autoDispose
       alsoWatch: args.alsoWatch);
 });
 
-AutoDisposeStateNotifierStateProvider<DataState<Model>> watchModel(dynamic id,
+AutoDisposeStateNotifierProvider<DataStateNotifier<Model>> watchModel(
+    dynamic id,
     {bool remote = true,
     Map<String, dynamic> params = const {},
     Map<String, String> headers = const {},
     AlsoWatch<Model> alsoWatch}) {
   return _watchModel(WatchArgs(
-          id: id,
-          remote: remote,
-          params: params,
-          headers: headers,
-          alsoWatch: alsoWatch))
-      .state;
+      id: id,
+      remote: remote,
+      params: params,
+      headers: headers,
+      alsoWatch: alsoWatch));
 }
 
 final _watchModels = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<List<Model>>, WatchArgs<Model>>((ref, args) {
+  ref.maintainState = false;
   return ref.watch(modelRepositoryProvider).watchAll(
       remote: args.remote, params: args.params, headers: args.headers);
 });
 
-AutoDisposeStateNotifierStateProvider<DataState<List<Model>>> watchModels(
+AutoDisposeStateNotifierProvider<DataStateNotifier<List<Model>>> watchModels(
     {bool remote, Map<String, dynamic> params, Map<String, String> headers}) {
   return _watchModels(
-          WatchArgs(remote: remote, params: params, headers: headers))
-      .state;
+      WatchArgs(remote: remote, params: params, headers: headers));
 }
 
 extension ModelX on Model {
@@ -193,9 +206,8 @@ class $CityRemoteAdapter = RemoteAdapter<City>
 
 //
 
-final cityLocalAdapterProvider = Provider<LocalAdapter<City>>((ref) =>
-    $CityHiveLocalAdapter(
-        ref.read(hiveLocalStorageProvider), ref.read(graphProvider)));
+final cityLocalAdapterProvider =
+    Provider<LocalAdapter<City>>((ref) => $CityHiveLocalAdapter(ref));
 
 final cityRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
     (ref) => $CityRemoteAdapter(ref.read(cityLocalAdapterProvider)));
@@ -212,31 +224,30 @@ final _watchCity = StateNotifierProvider.autoDispose
       alsoWatch: args.alsoWatch);
 });
 
-AutoDisposeStateNotifierStateProvider<DataState<City>> watchCity(dynamic id,
+AutoDisposeStateNotifierProvider<DataStateNotifier<City>> watchCity(dynamic id,
     {bool remote = true,
     Map<String, dynamic> params = const {},
     Map<String, String> headers = const {},
     AlsoWatch<City> alsoWatch}) {
   return _watchCity(WatchArgs(
-          id: id,
-          remote: remote,
-          params: params,
-          headers: headers,
-          alsoWatch: alsoWatch))
-      .state;
+      id: id,
+      remote: remote,
+      params: params,
+      headers: headers,
+      alsoWatch: alsoWatch));
 }
 
 final _watchCities = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<List<City>>, WatchArgs<City>>((ref, args) {
+  ref.maintainState = false;
   return ref.watch(cityRepositoryProvider).watchAll(
       remote: args.remote, params: args.params, headers: args.headers);
 });
 
-AutoDisposeStateNotifierStateProvider<DataState<List<City>>> watchCities(
+AutoDisposeStateNotifierProvider<DataStateNotifier<List<City>>> watchCities(
     {bool remote, Map<String, dynamic> params, Map<String, String> headers}) {
   return _watchCities(
-          WatchArgs(remote: remote, params: params, headers: headers))
-      .state;
+      WatchArgs(remote: remote, params: params, headers: headers));
 }
 
 extension CityX on City {
@@ -263,10 +274,112 @@ extension CityRepositoryX on Repository<City> {
 
 // ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, non_constant_identifier_names
 
+mixin $EmployeeLocalAdapter on LocalAdapter<Employee> {
+  @override
+  Map<String, Map<String, Object>> relationshipsFor([Employee model]) => {};
+
+  @override
+  Employee deserialize(map) {
+    for (final key in relationshipsFor().keys) {
+      map[key] = {
+        '_': [map[key], !map.containsKey(key)],
+      };
+    }
+    return Employee.fromJson(map);
+  }
+
+  @override
+  Map<String, dynamic> serialize(model) => model.toJson();
+}
+
+// ignore: must_be_immutable
+class $EmployeeHiveLocalAdapter = HiveLocalAdapter<Employee>
+    with $EmployeeLocalAdapter;
+
+class $EmployeeRemoteAdapter = RemoteAdapter<Employee>
+    with JSONAPIAdapter<Employee>, TestMixin<Employee>;
+
+//
+
+final employeeLocalAdapterProvider =
+    Provider<LocalAdapter<Employee>>((ref) => $EmployeeHiveLocalAdapter(ref));
+
+final employeeRemoteAdapterProvider = Provider<RemoteAdapter<Employee>>(
+    (ref) => $EmployeeRemoteAdapter(ref.read(employeeLocalAdapterProvider)));
+
+final employeeRepositoryProvider =
+    Provider<Repository<Employee>>((ref) => Repository<Employee>(ref));
+
+final _watchEmployee = StateNotifierProvider.autoDispose
+    .family<DataStateNotifier<Employee>, WatchArgs<Employee>>((ref, args) {
+  return ref.watch(employeeRepositoryProvider).watchOne(args.id,
+      remote: args.remote,
+      params: args.params,
+      headers: args.headers,
+      alsoWatch: args.alsoWatch);
+});
+
+AutoDisposeStateNotifierProvider<DataStateNotifier<Employee>> watchEmployee(
+    dynamic id,
+    {bool remote = true,
+    Map<String, dynamic> params = const {},
+    Map<String, String> headers = const {},
+    AlsoWatch<Employee> alsoWatch}) {
+  return _watchEmployee(WatchArgs(
+      id: id,
+      remote: remote,
+      params: params,
+      headers: headers,
+      alsoWatch: alsoWatch));
+}
+
+final _watchEmployees = StateNotifierProvider.autoDispose
+    .family<DataStateNotifier<List<Employee>>, WatchArgs<Employee>>(
+        (ref, args) {
+  ref.maintainState = false;
+  return ref.watch(employeeRepositoryProvider).watchAll(
+      remote: args.remote, params: args.params, headers: args.headers);
+});
+
+AutoDisposeStateNotifierProvider<DataStateNotifier<List<Employee>>>
+    watchEmployees(
+        {bool remote,
+        Map<String, dynamic> params,
+        Map<String, String> headers}) {
+  return _watchEmployees(
+      WatchArgs(remote: remote, params: params, headers: headers));
+}
+
+extension EmployeeX on Employee {
+  /// Initializes "fresh" models (i.e. manually instantiated) to use
+  /// [save], [delete] and so on.
+  ///
+  /// Pass:
+  ///  - A `BuildContext` if using Flutter with Riverpod or Provider
+  ///  - Nothing if using Flutter with GetIt
+  ///  - A Riverpod `ProviderContainer` if using pure Dart
+  ///  - Its own [Repository<Employee>]
+  Employee init(container) {
+    final repository = container is Repository<Employee>
+        ? container
+        : internalLocatorFn(employeeRepositoryProvider, container);
+    return repository.internalAdapter.initializeModel(this, save: true)
+        as Employee;
+  }
+}
+
+extension EmployeeRepositoryX on Repository<Employee> {
+  Future<Employee> loginTest(Employee model) =>
+      (internalAdapter as TestMixin<Employee>).loginTest(model);
+}
+
+// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, non_constant_identifier_names
+
 mixin $CompanyLocalAdapter on LocalAdapter<Company> {
   @override
   Map<String, Map<String, Object>> relationshipsFor([Company model]) => {
         'models': {
+          'name': 'models',
           'inverse': 'company',
           'type': 'models',
           'kind': 'HasMany',
@@ -297,9 +410,8 @@ class $CompanyRemoteAdapter = RemoteAdapter<Company>
 
 //
 
-final companyLocalAdapterProvider = Provider<LocalAdapter<Company>>((ref) =>
-    $CompanyHiveLocalAdapter(
-        ref.read(hiveLocalStorageProvider), ref.read(graphProvider)));
+final companyLocalAdapterProvider =
+    Provider<LocalAdapter<Company>>((ref) => $CompanyHiveLocalAdapter(ref));
 
 final companyRemoteAdapterProvider = Provider<RemoteAdapter<Company>>(
     (ref) => $CompanyRemoteAdapter(ref.read(companyLocalAdapterProvider)));
@@ -316,32 +428,34 @@ final _watchCompany = StateNotifierProvider.autoDispose
       alsoWatch: args.alsoWatch);
 });
 
-AutoDisposeStateNotifierStateProvider<DataState<Company>> watchCompany(
+AutoDisposeStateNotifierProvider<DataStateNotifier<Company>> watchCompany(
     dynamic id,
     {bool remote = true,
     Map<String, dynamic> params = const {},
     Map<String, String> headers = const {},
     AlsoWatch<Company> alsoWatch}) {
   return _watchCompany(WatchArgs(
-          id: id,
-          remote: remote,
-          params: params,
-          headers: headers,
-          alsoWatch: alsoWatch))
-      .state;
+      id: id,
+      remote: remote,
+      params: params,
+      headers: headers,
+      alsoWatch: alsoWatch));
 }
 
 final _watchCompanies = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<List<Company>>, WatchArgs<Company>>((ref, args) {
+  ref.maintainState = false;
   return ref.watch(companyRepositoryProvider).watchAll(
       remote: args.remote, params: args.params, headers: args.headers);
 });
 
-AutoDisposeStateNotifierStateProvider<DataState<List<Company>>> watchCompanies(
-    {bool remote, Map<String, dynamic> params, Map<String, String> headers}) {
+AutoDisposeStateNotifierProvider<DataStateNotifier<List<Company>>>
+    watchCompanies(
+        {bool remote,
+        Map<String, dynamic> params,
+        Map<String, String> headers}) {
   return _watchCompanies(
-          WatchArgs(remote: remote, params: params, headers: headers))
-      .state;
+      WatchArgs(remote: remote, params: params, headers: headers));
 }
 
 extension CompanyX on Company {
