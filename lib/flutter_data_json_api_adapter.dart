@@ -127,29 +127,30 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
       mapOut['id'] = obj.id;
 
-      if (obj.relationships != null) {
-        for (final relEntry in obj.relationships.entries) {
-          final rel = relEntry.value;
-          final mapOutKey = fieldForKey(relEntry.key);
+      for (final relEntry in (obj.relationships ?? {}).entries) {
+        final rel = relEntry.value;
+        final mapOutKey = fieldForKey(relEntry.key);
 
-          if (rel is ToOne && rel.linkage?.id != null) {
-            final localType = _localTypeFor(rel.linkage.type);
-            final key = graph.getKeyForId(localType, rel.linkage.id,
-                keyIfAbsent: DataHelpers.generateKey(localType));
-            mapOut[mapOutKey] = key;
-          }
-
-          if (rel is ToMany) {
-            mapOut[mapOutKey] = rel.linkage.map((i) {
-              final localType = _localTypeFor(i.type);
-              return i.id == null
-                  ? null
-                  : graph.getKeyForId(localType, i.id,
-                      keyIfAbsent: DataHelpers.generateKey(localType));
-            }).toList();
-          }
+        if (rel is ToOne && rel.linkage?.id != null) {
+          final localType = _localTypeFor(rel.linkage.type);
+          final key = graph.getKeyForId(localType, rel.linkage.id,
+              keyIfAbsent: DataHelpers.generateKey(localType));
+          mapOut[mapOutKey] = key;
         }
-        mapOut.addAll(obj.attributes);
+
+        if (rel is ToMany) {
+          mapOut[mapOutKey] = rel.linkage.map((i) {
+            final localType = _localTypeFor(i.type);
+            return i.id == null
+                ? null
+                : graph.getKeyForId(localType, i.id,
+                    keyIfAbsent: DataHelpers.generateKey(localType));
+          }).toList();
+        }
+      }
+
+      for (final attrEntry in obj.attributes.entries) {
+        mapOut[fieldForKey(attrEntry.key)] = attrEntry.value;
       }
 
       final model = localAdapter.deserialize(mapOut);

@@ -1,3 +1,8 @@
+## [0.1.9] - 2020-12-11
+
+ - Fix `fieldForKey` in attributes
+ - Fix tests
+
 ## [0.1.8] - 2020-12-06
 
  - Allow mapping local to remote types

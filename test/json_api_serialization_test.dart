@@ -3,60 +3,33 @@ import 'package:mockito/mockito.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:test/test.dart';
 
-import 'models.dart';
+import 'models/city.dart';
+import 'models/company.dart';
+import 'models/employee.dart';
+import 'models/model.dart';
+import 'test.data.dart';
 
 class GraphNotifierMock extends Mock implements GraphNotifier {}
-
-final graphMock = GraphNotifierMock();
-
-// ignore: must_be_immutable
-class _CityLocalAdapterMock extends Mock implements LocalAdapter<City> {}
-
-class CityLocalAdapterMock extends _CityLocalAdapterMock
-    with $CityLocalAdapter {
-  @override
-  GraphNotifier get graph => graphMock;
-}
-
-// ignore: must_be_immutable
-class _ModelLocalAdapterMock extends Mock implements LocalAdapter<Model> {}
-
-class ModelLocalAdapterMock extends _ModelLocalAdapterMock
-    with $ModelLocalAdapter {
-  @override
-  GraphNotifier get graph => graphMock;
-}
-
-// ignore: must_be_immutable
-class _CompanyLocalAdapterMock extends Mock implements LocalAdapter<Company> {}
-
-class CompanyLocalAdapterMock extends _CompanyLocalAdapterMock
-    with $CompanyLocalAdapter {
-  @override
-  GraphNotifier get graph => graphMock;
-}
 
 void main() async {
   ProviderContainer container;
 
-  final cityLocalAdapter = CityLocalAdapterMock();
-  final companyLocalAdapter = CompanyLocalAdapterMock();
-  final modelLocalAdapter = ModelLocalAdapterMock();
+  // final cityLocalAdapter = CityLocalAdapterMock();
+  // final companyLocalAdapter = CompanyLocalAdapterMock();
+  // final modelLocalAdapter = ModelLocalAdapterMock();
+  // final employeeLocalAdapter = EmployeeLocalAdapterMock();
 
   RemoteAdapter<Model> modelRemoteAdapter;
   RemoteAdapter<City> cityRemoteAdapter;
   RemoteAdapter<Company> companyRemoteAdapter;
+  RemoteAdapter<Employee> employeeRemoteAdapter;
   Map<String, RemoteAdapter<DataModel>> adapters;
 
   setUp(() async {
     container = ProviderContainer(
       overrides: [
-        companyLocalAdapterProvider
-            .overrideWithProvider(Provider((_) => companyLocalAdapter)),
-        modelLocalAdapterProvider
-            .overrideWithProvider(Provider((_) => modelLocalAdapter)),
-        cityLocalAdapterProvider
-            .overrideWithProvider(Provider((_) => cityLocalAdapter)),
+        ...flutterDataTestOverrides,
+        graphProvider.overrideWithValue(GraphNotifierMock()),
       ],
     );
 
@@ -64,6 +37,7 @@ void main() async {
       'models': container.read(modelRemoteAdapterProvider),
       'cities': container.read(cityRemoteAdapterProvider),
       'companies': container.read(companyRemoteAdapterProvider),
+      'employees': container.read(employeeRemoteAdapterProvider),
     };
 
     modelRemoteAdapter = await container
@@ -74,6 +48,9 @@ void main() async {
         .initialize(adapters: adapters);
     companyRemoteAdapter = await container
         .read(companyRemoteAdapterProvider)
+        .initialize(adapters: adapters);
+    employeeRemoteAdapter = await container
+        .read(employeeRemoteAdapterProvider)
         .initialize(adapters: adapters);
   });
 
@@ -155,7 +132,7 @@ void main() async {
   });
 
   test('deserialize with belongsto relationship', () {
-    when(graphMock.getKeyForId('companies', '1',
+    when(container.read(graphProvider).getKeyForId('companies', '1',
             keyIfAbsent: anyNamed('keyIfAbsent')))
         .thenReturn('companies#a1');
 
@@ -182,24 +159,43 @@ void main() async {
     expect(model.company.key, 'companies#a1');
   });
 
-  test('deserialize with hasmany relationship (and included)', () {
+  test(
+      'deserialize with hasmany relationship (and included) (and fieldForKey override)',
+      () {
+    final graphMock = container.read(graphProvider);
     when(graphMock.getKeyForId('models', '1',
             keyIfAbsent: anyNamed('keyIfAbsent')))
         .thenReturn('models#a1');
     when(graphMock.getKeyForId('models', '2',
             keyIfAbsent: anyNamed('keyIfAbsent')))
         .thenReturn('models#a2');
+    when(graphMock.getKeyForId('employees', '1',
+            keyIfAbsent: anyNamed('keyIfAbsent')))
+        .thenReturn('employees#e1');
+    when(graphMock.getKeyForId('employees', '2',
+            keyIfAbsent: anyNamed('keyIfAbsent')))
+        .thenReturn('employees#e2');
 
     final data = companyRemoteAdapter.deserialize({
       'data': {
         'type': 'companies',
         'id': '19',
-        'attributes': {'name': 'Mono Motor Co.'},
+        'attributes': {
+          'name': 'Mono Motor Co.',
+          // company has the CaseAdapter to see this as `updatedAt`
+          'updated_at': '2020-12-12 12:00',
+        },
         'relationships': {
           'models': {
             'data': [
               {'id': '1', 'type': 'models'},
               {'id': '2', 'type': 'models'},
+            ]
+          },
+          'w': {
+            'data': [
+              {'id': '1', 'type': 'workers'},
+              {'id': '2', 'type': 'workers'},
             ]
           }
         }
@@ -219,7 +215,17 @@ void main() async {
           'type': 'cities',
           'id': '1',
           'attributes': {'name': 'Manila'},
-        }
+        },
+        {
+          'type': 'workers',
+          'id': '1',
+          'attributes': {'name': 'Sandro'},
+        },
+        {
+          'type': 'workers',
+          'id': '2',
+          'attributes': {'name': 'August'},
+        },
       ]
     }, init: false);
 
@@ -230,11 +236,20 @@ void main() async {
       company,
       isA<Company>()
           .having((m) => m.name, 'name', 'Mono Motor Co.')
+          .having((m) => m.updatedAt, 'updatedAt',
+              DateTime.parse('2020-12-12 12:00'))
           .having((m) => m.id, 'id', '19'),
     );
     // need to check on keys as model/relationships are not initialized
     expect(company.models.keys, {'models#a1', 'models#a2'});
+    expect(company.employees.keys, {'employees#e1', 'employees#e2'});
 
-    expect(models, [isA<Model>(), isA<Model>(), isA<City>()]);
+    expect(models, [
+      isA<Model>(),
+      isA<Model>(),
+      isA<City>(),
+      isA<Employee>(),
+      isA<Employee>()
+    ]);
   });
 }
