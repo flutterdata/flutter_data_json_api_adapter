@@ -1,3 +1,9 @@
+# CHANGELOG
+
+## [0.1.10] - 2021-03-11
+
+ - Upgrade Flutter Data dependency
+
 ## [0.1.9] - 2020-12-11
 
  - Fix `fieldForKey` in attributes
