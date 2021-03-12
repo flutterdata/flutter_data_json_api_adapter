@@ -14,15 +14,9 @@ class GraphNotifierMock extends Mock implements GraphNotifier {}
 void main() async {
   ProviderContainer container;
 
-  // final cityLocalAdapter = CityLocalAdapterMock();
-  // final companyLocalAdapter = CompanyLocalAdapterMock();
-  // final modelLocalAdapter = ModelLocalAdapterMock();
-  // final employeeLocalAdapter = EmployeeLocalAdapterMock();
-
   RemoteAdapter<Model> modelRemoteAdapter;
   RemoteAdapter<City> cityRemoteAdapter;
   RemoteAdapter<Company> companyRemoteAdapter;
-  RemoteAdapter<Employee> employeeRemoteAdapter;
   Map<String, RemoteAdapter<DataModel>> adapters;
 
   setUp(() async {
@@ -48,9 +42,6 @@ void main() async {
         .initialize(adapters: adapters);
     companyRemoteAdapter = await container
         .read(companyRemoteAdapterProvider)
-        .initialize(adapters: adapters);
-    employeeRemoteAdapter = await container
-        .read(employeeRemoteAdapterProvider)
         .initialize(adapters: adapters);
   });
 
