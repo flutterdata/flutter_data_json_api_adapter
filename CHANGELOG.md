@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.1.11] - 2021-03-12
+
+ - Upgrade Flutter Data dependency
+
 ## [0.1.10] - 2021-03-11
 
  - Upgrade Flutter Data dependency

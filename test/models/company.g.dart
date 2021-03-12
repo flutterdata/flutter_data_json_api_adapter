@@ -117,7 +117,11 @@ final _watchCompanies = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<List<Company>>, WatchArgs<Company>>((ref, args) {
   ref.maintainState = false;
   return ref.watch(companyRepositoryProvider).watchAll(
-      remote: args.remote, params: args.params, headers: args.headers);
+      remote: args.remote,
+      params: args.params,
+      headers: args.headers,
+      filterLocal: args.filterLocal,
+      syncLocal: args.syncLocal);
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<List<Company>>>

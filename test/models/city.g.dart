@@ -85,7 +85,11 @@ final _watchCities = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<List<City>>, WatchArgs<City>>((ref, args) {
   ref.maintainState = false;
   return ref.watch(cityRepositoryProvider).watchAll(
-      remote: args.remote, params: args.params, headers: args.headers);
+      remote: args.remote,
+      params: args.params,
+      headers: args.headers,
+      filterLocal: args.filterLocal,
+      syncLocal: args.syncLocal);
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<List<City>>> watchCities(

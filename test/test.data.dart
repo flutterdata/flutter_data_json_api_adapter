@@ -1,3 +1,5 @@
+
+
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: directives_ordering, top_level_function_literal_block
 
@@ -21,42 +23,50 @@ class $TestCityLocalAdapter = $CityHiveLocalAdapter
     with TestHiveLocalAdapter<City>;
 class TestCityRemoteAdapter = $CityRemoteAdapter with TestRemoteAdapter;
 
+
 // ignore: must_be_immutable
 class $TestEmployeeLocalAdapter = $EmployeeHiveLocalAdapter
     with TestHiveLocalAdapter<Employee>;
 class TestEmployeeRemoteAdapter = $EmployeeRemoteAdapter with TestRemoteAdapter;
+
 
 // ignore: must_be_immutable
 class $TestModelLocalAdapter = $ModelHiveLocalAdapter
     with TestHiveLocalAdapter<Model>;
 class TestModelRemoteAdapter = $ModelRemoteAdapter with TestRemoteAdapter;
 
+
 // ignore: must_be_immutable
 class $TestCompanyLocalAdapter = $CompanyHiveLocalAdapter
     with TestHiveLocalAdapter<Company>;
 class TestCompanyRemoteAdapter = $CompanyRemoteAdapter with TestRemoteAdapter;
 
+
 final flutterDataTestOverrides = [
   hiveLocalStorageProvider
-      .overrideWithProvider(Provider((_) => TestHiveLocalStorage())),
+    .overrideWithProvider(Provider((_) => TestHiveLocalStorage())),
   graphProvider.overrideWithProvider(Provider(
-      (ref) => TestDataGraphNotifier(ref.read(hiveLocalStorageProvider)))),
-  cityLocalAdapterProvider
-      .overrideWithProvider(Provider((ref) => $TestCityLocalAdapter(ref))),
-  cityRemoteAdapterProvider.overrideWithProvider(Provider(
-      (ref) => TestCityRemoteAdapter(ref.read(cityLocalAdapterProvider)))),
-  employeeLocalAdapterProvider
-      .overrideWithProvider(Provider((ref) => $TestEmployeeLocalAdapter(ref))),
-  employeeRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-      TestEmployeeRemoteAdapter(ref.read(employeeLocalAdapterProvider)))),
-  modelLocalAdapterProvider
-      .overrideWithProvider(Provider((ref) => $TestModelLocalAdapter(ref))),
-  modelRemoteAdapterProvider.overrideWithProvider(Provider(
-      (ref) => TestModelRemoteAdapter(ref.read(modelLocalAdapterProvider)))),
-  companyLocalAdapterProvider
-      .overrideWithProvider(Provider((ref) => $TestCompanyLocalAdapter(ref))),
-  companyRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-      TestCompanyRemoteAdapter(ref.read(companyLocalAdapterProvider)))),
+    (ref) => TestDataGraphNotifier(ref.read(hiveLocalStorageProvider)))),
+  cityLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
+    $TestCityLocalAdapter(ref))),
+cityRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
+    TestCityRemoteAdapter(ref.read(cityLocalAdapterProvider)))),
+
+employeeLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
+    $TestEmployeeLocalAdapter(ref))),
+employeeRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
+    TestEmployeeRemoteAdapter(ref.read(employeeLocalAdapterProvider)))),
+
+modelLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
+    $TestModelLocalAdapter(ref))),
+modelRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
+    TestModelRemoteAdapter(ref.read(modelLocalAdapterProvider)))),
+
+companyLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
+    $TestCompanyLocalAdapter(ref))),
+companyRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
+    TestCompanyRemoteAdapter(ref.read(companyLocalAdapterProvider)))),
+
 ];
 
 // fakes, mocks & mixins
@@ -192,3 +202,4 @@ final mockResponseProvider =
     Provider.family<http.Response, http.Request>((ref, req) {
   throw UnsupportedError('Please override mockResponseProvider!');
 });
+

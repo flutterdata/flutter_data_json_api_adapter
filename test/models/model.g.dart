@@ -98,7 +98,11 @@ final _watchModels = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<List<Model>>, WatchArgs<Model>>((ref, args) {
   ref.maintainState = false;
   return ref.watch(modelRepositoryProvider).watchAll(
-      remote: args.remote, params: args.params, headers: args.headers);
+      remote: args.remote,
+      params: args.params,
+      headers: args.headers,
+      filterLocal: args.filterLocal,
+      syncLocal: args.syncLocal);
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<List<Model>>> watchModels(
