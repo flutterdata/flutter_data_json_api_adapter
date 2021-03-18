@@ -34,6 +34,10 @@ void main() async {
       'employees': container.read(employeeRemoteAdapterProvider),
     };
 
+    // stub check for graph for offline
+    final graph = container.read(graphProvider);
+    when(graph.hasNode(argThat(startsWith('_offline')))).thenReturn(true);
+
     modelRemoteAdapter = await container
         .read(modelRemoteAdapterProvider)
         .initialize(adapters: adapters);

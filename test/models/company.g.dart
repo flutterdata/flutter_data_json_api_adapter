@@ -137,21 +137,11 @@ extension CompanyX on Company {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
-  /// Pass:
-  ///  - A `BuildContext` if using Flutter with Riverpod or Provider
-  ///  - Nothing if using Flutter with GetIt
-  ///  - A Riverpod `ProviderContainer` if using pure Dart
-  ///  - Its own [Repository<Company>]
-  Company init(container) {
-    final repository = container is Repository<Company>
-        ? container
-        : internalLocatorFn(companyRepositoryProvider, container);
-    return repository.internalAdapter.initializeModel(this, save: true)
-        as Company;
+  /// Requires a `Reader read` (unless using GetIt).
+  ///
+  /// Can be obtained via `context.read`, `ref.read`, `container.read`
+  Company init(Reader read) {
+    final repository = internalLocatorFn(companyRepositoryProvider, read);
+    return repository.remoteAdapter.initializeModel(this, save: true);
   }
-}
-
-extension CompanyRepositoryX on Repository<Company> {
-  Future<Company> loginTest(Company model) =>
-      (internalAdapter as TestMixin<Company>).loginTest(model);
 }

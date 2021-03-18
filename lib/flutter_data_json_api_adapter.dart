@@ -61,7 +61,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
           }).toList();
           relationships[key] = {'data': identifiers};
         }
-        if (map[field] is BelongsTo) {
+        if (map[field] is BelongsTo && (map[field] as BelongsTo).isNotEmpty) {
           relationships[key] = {
             'data': IdentifierObject(relType, map[field].value.id).toJson(),
           };

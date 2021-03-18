@@ -115,21 +115,11 @@ extension ModelX on Model {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
-  /// Pass:
-  ///  - A `BuildContext` if using Flutter with Riverpod or Provider
-  ///  - Nothing if using Flutter with GetIt
-  ///  - A Riverpod `ProviderContainer` if using pure Dart
-  ///  - Its own [Repository<Model>]
-  Model init(container) {
-    final repository = container is Repository<Model>
-        ? container
-        : internalLocatorFn(modelRepositoryProvider, container);
-    return repository.internalAdapter.initializeModel(this, save: true)
-        as Model;
+  /// Requires a `Reader read` (unless using GetIt).
+  ///
+  /// Can be obtained via `context.read`, `ref.read`, `container.read`
+  Model init(Reader read) {
+    final repository = internalLocatorFn(modelRepositoryProvider, read);
+    return repository.remoteAdapter.initializeModel(this, save: true);
   }
-}
-
-extension ModelRepositoryX on Repository<Model> {
-  Future<Model> loginTest(Model model) =>
-      (internalAdapter as TestMixin<Model>).loginTest(model);
 }

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.2.0-rc1] - 2020-03-18
+
+- Add guard to `BelongsTo` serialization
+- Add stub for new offline node in graph
+- Upgrade Flutter Data dependency
+
 ## [0.1.11] - 2021-03-12
 
 - Upgrade Flutter Data dependency

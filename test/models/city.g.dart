@@ -102,20 +102,11 @@ extension CityX on City {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
-  /// Pass:
-  ///  - A `BuildContext` if using Flutter with Riverpod or Provider
-  ///  - Nothing if using Flutter with GetIt
-  ///  - A Riverpod `ProviderContainer` if using pure Dart
-  ///  - Its own [Repository<City>]
-  City init(container) {
-    final repository = container is Repository<City>
-        ? container
-        : internalLocatorFn(cityRepositoryProvider, container);
-    return repository.internalAdapter.initializeModel(this, save: true) as City;
+  /// Requires a `Reader read` (unless using GetIt).
+  ///
+  /// Can be obtained via `context.read`, `ref.read`, `container.read`
+  City init(Reader read) {
+    final repository = internalLocatorFn(cityRepositoryProvider, read);
+    return repository.remoteAdapter.initializeModel(this, save: true);
   }
-}
-
-extension CityRepositoryX on Repository<City> {
-  Future<City> loginTest(City model) =>
-      (internalAdapter as TestMixin<City>).loginTest(model);
 }

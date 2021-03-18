@@ -109,21 +109,11 @@ extension EmployeeX on Employee {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
-  /// Pass:
-  ///  - A `BuildContext` if using Flutter with Riverpod or Provider
-  ///  - Nothing if using Flutter with GetIt
-  ///  - A Riverpod `ProviderContainer` if using pure Dart
-  ///  - Its own [Repository<Employee>]
-  Employee init(container) {
-    final repository = container is Repository<Employee>
-        ? container
-        : internalLocatorFn(employeeRepositoryProvider, container);
-    return repository.internalAdapter.initializeModel(this, save: true)
-        as Employee;
+  /// Requires a `Reader read` (unless using GetIt).
+  ///
+  /// Can be obtained via `context.read`, `ref.read`, `container.read`
+  Employee init(Reader read) {
+    final repository = internalLocatorFn(employeeRepositoryProvider, read);
+    return repository.remoteAdapter.initializeModel(this, save: true);
   }
-}
-
-extension EmployeeRepositoryX on Repository<Employee> {
-  Future<Employee> loginTest(Employee model) =>
-      (internalAdapter as TestMixin<Employee>).loginTest(model);
 }
