@@ -19,9 +19,7 @@ abstract class Company with DataModel<Company>, _$Company {
     String nasdaq,
     DateTime updatedAt,
     HasMany<Model> models,
-    @DataRelationship(remoteType: 'workers')
-    @JsonKey(name: 'w')
-        HasMany<Employee> employees,
+    @JsonKey(name: 'w') HasMany<Employee> employees,
   }) = _Company;
 
   factory Company.fromJson(Map<String, dynamic> json) =>

@@ -53,8 +53,7 @@ mixin $CompanyLocalAdapter on LocalAdapter<Company> {
           'name': 'employees',
           'type': 'employees',
           'kind': 'HasMany',
-          'instance': model?.employees,
-          'remoteType': 'workers'
+          'instance': model?.employees
         }
       };
 
@@ -136,8 +135,6 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<List<Company>>>
 extension CompanyX on Company {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
-  ///
-  /// Requires a `Reader read` (unless using GetIt).
   ///
   /// Can be obtained via `context.read`, `ref.read`, `container.read`
   Company init(Reader read) {

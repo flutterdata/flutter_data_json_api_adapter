@@ -23,9 +23,7 @@ class _$CompanyTearOff {
       String nasdaq,
       DateTime updatedAt,
       HasMany<Model> models,
-      @DataRelationship(remoteType: 'workers')
-      @JsonKey(name: 'w')
-          HasMany<Employee> employees}) {
+      @JsonKey(name: 'w') HasMany<Employee> employees}) {
     return _Company(
       id: id,
       name: name,
@@ -53,7 +51,6 @@ mixin _$Company {
   String get nasdaq;
   DateTime get updatedAt;
   HasMany<Model> get models;
-  @DataRelationship(remoteType: 'workers')
   @JsonKey(name: 'w')
   HasMany<Employee> get employees;
 
@@ -71,9 +68,7 @@ abstract class $CompanyCopyWith<$Res> {
       String nasdaq,
       DateTime updatedAt,
       HasMany<Model> models,
-      @DataRelationship(remoteType: 'workers')
-      @JsonKey(name: 'w')
-          HasMany<Employee> employees});
+      @JsonKey(name: 'w') HasMany<Employee> employees});
 }
 
 /// @nodoc
@@ -118,9 +113,7 @@ abstract class _$CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
       String nasdaq,
       DateTime updatedAt,
       HasMany<Model> models,
-      @DataRelationship(remoteType: 'workers')
-      @JsonKey(name: 'w')
-          HasMany<Employee> employees});
+      @JsonKey(name: 'w') HasMany<Employee> employees});
 }
 
 /// @nodoc
@@ -165,9 +158,7 @@ class _$_Company extends _Company {
       this.nasdaq,
       this.updatedAt,
       this.models,
-      @DataRelationship(remoteType: 'workers')
-      @JsonKey(name: 'w')
-          this.employees})
+      @JsonKey(name: 'w') this.employees})
       : super._();
 
   factory _$_Company.fromJson(Map<String, dynamic> json) =>
@@ -184,7 +175,6 @@ class _$_Company extends _Company {
   @override
   final HasMany<Model> models;
   @override
-  @DataRelationship(remoteType: 'workers')
   @JsonKey(name: 'w')
   final HasMany<Employee> employees;
 
@@ -241,9 +231,7 @@ abstract class _Company extends Company {
       String nasdaq,
       DateTime updatedAt,
       HasMany<Model> models,
-      @DataRelationship(remoteType: 'workers')
-      @JsonKey(name: 'w')
-          HasMany<Employee> employees}) = _$_Company;
+      @JsonKey(name: 'w') HasMany<Employee> employees}) = _$_Company;
 
   factory _Company.fromJson(Map<String, dynamic> json) = _$_Company.fromJson;
 
@@ -258,7 +246,6 @@ abstract class _Company extends Company {
   @override
   HasMany<Model> get models;
   @override
-  @DataRelationship(remoteType: 'workers')
   @JsonKey(name: 'w')
   HasMany<Employee> get employees;
   @override

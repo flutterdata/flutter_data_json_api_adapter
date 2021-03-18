@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.2.0-rc2] - 2020-03-18
+
+- Support and test overridable remote `type`, null relationships
+
 ## [0.2.0-rc1] - 2020-03-18
 
 - Add guard to `BelongsTo` serialization

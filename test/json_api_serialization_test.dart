@@ -78,14 +78,30 @@ void main() async {
         },
       }
     });
+
+    final person2 =
+        Model(id: '23', name: 'Ko', company: Company(id: null).asBelongsTo);
+
+    // ignores null relationships
+    expect(modelRemoteAdapter.serialize(person2), {
+      'data': {
+        'type': 'models',
+        'id': '23',
+        'attributes': {'name': 'Ko'},
+      }
+    });
   });
 
   test('serialize with has many', () {
     final c = Company(
         id: '1',
         name: 'Acme',
-        models:
-            {Model(id: '1', name: 'A'), Model(id: '2', name: 'B')}.asHasMany);
+        employees: {Employee(id: '10', name: 'Wendy')}.asHasMany,
+        models: {
+          Model(id: '1', name: 'A'),
+          Model(id: null),
+          Model(id: '2', name: 'B')
+        }.asHasMany);
 
     expect(companyRemoteAdapter.serialize(c), {
       'data': {
@@ -97,6 +113,11 @@ void main() async {
             'data': [
               {'type': 'models', 'id': '1'},
               {'type': 'models', 'id': '2'}
+            ]
+          },
+          'w': {
+            'data': [
+              {'type': 'workers', 'id': '10'},
             ]
           }
         },
@@ -246,5 +267,26 @@ void main() async {
       isA<Employee>(),
       isA<Employee>()
     ]);
+  });
+
+  test('deserialize with overidden type', () {
+    when(container.read(graphProvider).getKeyForId('employees', '1',
+            keyIfAbsent: anyNamed('keyIfAbsent')))
+        .thenReturn('employees#e1');
+
+    final model = container.read(employeeRemoteAdapterProvider).deserialize({
+      'data': {
+        'type': 'workers',
+        'id': '19',
+        'attributes': {'name': 'Hector'},
+      }
+    }).model;
+
+    expect(
+      model,
+      isA<Employee>()
+          .having((m) => m.name, 'name', 'Hector')
+          .having((m) => m.id, 'id', '19'),
+    );
   });
 }

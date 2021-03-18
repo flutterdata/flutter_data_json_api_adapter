@@ -48,7 +48,7 @@ class $EmployeeHiveLocalAdapter = HiveLocalAdapter<Employee>
     with $EmployeeLocalAdapter;
 
 class $EmployeeRemoteAdapter = RemoteAdapter<Employee>
-    with JSONAPIAdapter<Employee>, TestMixin<Employee>;
+    with JSONAPIAdapter<Employee>, TestMixin<Employee>, EmployeeMixin;
 
 //
 
@@ -108,8 +108,6 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<List<Employee>>>
 extension EmployeeX on Employee {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
-  ///
-  /// Requires a `Reader read` (unless using GetIt).
   ///
   /// Can be obtained via `context.read`, `ref.read`, `container.read`
   Employee init(Reader read) {

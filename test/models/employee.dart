@@ -8,7 +8,7 @@ part 'employee.freezed.dart';
 part 'employee.g.dart';
 
 @freezed
-@DataRepository([JSONAPIAdapter, TestMixin])
+@DataRepository([JSONAPIAdapter, TestMixin, EmployeeMixin])
 abstract class Employee with DataModel<Employee>, _$Employee {
   Employee._();
   factory Employee({
@@ -18,4 +18,9 @@ abstract class Employee with DataModel<Employee>, _$Employee {
 
   factory Employee.fromJson(Map<String, dynamic> json) =>
       _$EmployeeFromJson(json);
+}
+
+mixin EmployeeMixin on RemoteAdapter<Employee> {
+  @override
+  String get type => 'workers';
 }

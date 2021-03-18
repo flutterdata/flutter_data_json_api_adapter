@@ -203,7 +203,7 @@ packages:
       name: flutter_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.0-rc1"
+    version: "0.7.0-rc2"
   freezed:
     dependency: "direct dev"
     description:

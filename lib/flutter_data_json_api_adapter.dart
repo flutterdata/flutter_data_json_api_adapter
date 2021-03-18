@@ -44,27 +44,31 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
   /// Transforms native format into JSON:API
   @override
-  Map<String, dynamic> serialize(final model) {
+  Map<String, dynamic> serialize(final T model) {
     final map = localAdapter.serialize(model).filterNulls;
 
     final relationships = <String, dynamic>{};
 
     for (final relEntry in localAdapter.relationshipsFor(model).entries) {
       final field = relEntry.key;
-      final relType = relEntry.value['type'] as String;
+      final _type = _typeFor(relEntry.value['type'] as String);
       final key = keyForField(field);
 
       if (map[field] != null) {
         if (map[field] is HasMany) {
-          final identifiers = map[field].toSet().map((m) {
-            return IdentifierObject(relType, m.id).toJson();
+          final identifiers =
+              map[field].where((m) => m.id != null).toSet().map((m) {
+            return IdentifierObject(_type, m.id).toJson();
           }).toList();
           relationships[key] = {'data': identifiers};
         }
-        if (map[field] is BelongsTo && (map[field] as BelongsTo).isNotEmpty) {
-          relationships[key] = {
-            'data': IdentifierObject(relType, map[field].value.id).toJson(),
-          };
+        if (map[field] is BelongsTo) {
+          final rel = map[field] as BelongsTo;
+          if (rel.value?.id != null) {
+            relationships[key] = {
+              'data': IdentifierObject(_type, map[field].value.id).toJson(),
+            };
+          }
         }
       }
       map.remove(field);
@@ -116,8 +120,9 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
     if (collectionData?.included != null) {
       for (final include in collectionData.included) {
-        final _type = _localTypeFor(include.type);
-        final model = adapters[_type]?.deserialize(include, init: init)?.model;
+        final _internalType = _internalTypeFor(include.type);
+        final model =
+            adapters[_internalType]?.deserialize(include, init: init)?.model;
         result.included.add(model);
       }
     }
@@ -132,19 +137,19 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         final mapOutKey = fieldForKey(relEntry.key);
 
         if (rel is ToOne && rel.linkage?.id != null) {
-          final localType = _localTypeFor(rel.linkage.type);
-          final key = graph.getKeyForId(localType, rel.linkage.id,
-              keyIfAbsent: DataHelpers.generateKey(localType));
+          final _internalType = _internalTypeFor(rel.linkage.type);
+          final key = graph.getKeyForId(_internalType, rel.linkage.id,
+              keyIfAbsent: DataHelpers.generateKey(_internalType));
           mapOut[mapOutKey] = key;
         }
 
         if (rel is ToMany) {
           mapOut[mapOutKey] = rel.linkage.map((i) {
-            final localType = _localTypeFor(i.type);
+            final _internalType = _internalTypeFor(i.type);
             return i.id == null
                 ? null
-                : graph.getKeyForId(localType, i.id,
-                    keyIfAbsent: DataHelpers.generateKey(localType));
+                : graph.getKeyForId(_internalType, i.id,
+                    keyIfAbsent: DataHelpers.generateKey(_internalType));
           }).toList();
         }
       }
@@ -163,16 +168,15 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     return result;
   }
 
-  String _localTypeFor(String remoteType) {
-    remoteType = DataHelpers.getType(remoteType);
-    final values = localAdapter
-        .relationshipsFor()
-        .values
-        .where((e) => e['remoteType'] == remoteType);
-    if (values.isNotEmpty) {
-      return values.first['type'];
-    }
-    return remoteType;
+  String _internalTypeFor(String type) {
+    final _a = adapters.values.where((adapter) => adapter.type == type);
+    return _a.isNotEmpty ? _a.first.internalType : type;
+  }
+
+  String _typeFor(String internalType) {
+    final _a = adapters.values
+        .where((adapter) => adapter.internalType == internalType);
+    return _a.isNotEmpty ? _a.first.type : internalType;
   }
 }
 
