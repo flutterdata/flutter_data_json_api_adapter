@@ -1,6 +1,6 @@
 name: flutter_data_json_api_adapter
 description: JSON:API adapter for Flutter Data
-version: 0.2.0
+version: 0.2.0-rc3
 homepage: https://github.com/flutterdata/flutter_data_json_api_adapter
 
 environment:

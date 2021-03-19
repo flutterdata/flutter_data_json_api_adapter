@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [0.2.0] - 2020-03-19
+## [0.2.0-rc3] - 2020-03-19
 
 - Fix `keyForField` in serialize attributes
 - Support and test overridable remote `type`, null relationships
