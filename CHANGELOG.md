@@ -1,11 +1,9 @@
 # CHANGELOG
 
-## [0.2.0-rc2] - 2020-03-18
+## [0.2.0] - 2020-03-19
 
+- Fix `keyForField` in serialize attributes
 - Support and test overridable remote `type`, null relationships
-
-## [0.2.0-rc1] - 2020-03-18
-
 - Add guard to `BelongsTo` serialization
 - Add stub for new offline node in graph
 - Upgrade Flutter Data dependency
