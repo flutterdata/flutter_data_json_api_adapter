@@ -25,4 +25,7 @@ mixin TestMixin<T extends DataModel<T>> on RemoteAdapter<T> {
 mixin CaseMixin<T extends DataModel<T>> on RemoteAdapter<T> {
   @override
   String fieldForKey(String key) => ReCase(key).camelCase;
+
+  @override
+  String keyForField(String field) => ReCase(field).snakeCase;
 }

@@ -50,12 +50,13 @@ void main() async {
   });
 
   test('serialize', () {
-    final person = Model(id: '23', name: 'Ko');
-    expect(modelRemoteAdapter.serialize(person), {
+    final company =
+        Company(id: '23', name: 'Ko', updatedAt: DateTime.parse('2020-02-02'));
+    expect(companyRemoteAdapter.serialize(company), {
       'data': {
-        'type': 'models',
+        'type': 'companies',
         'id': '23',
-        'attributes': {'name': 'Ko'}
+        'attributes': {'name': 'Ko', 'updated_at': '2020-02-02T00:00:00.000'}
       }
     });
   });
