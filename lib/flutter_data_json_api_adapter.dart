@@ -75,7 +75,11 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     }
 
     final id = map.remove('id');
-    final resource = ResourceObject(type, id?.toString(), attributes: map);
+    final renamedMap = Map.fromEntries(
+        map.entries.map((e) => MapEntry(keyForField(e.key), e.value)));
+
+    final resource =
+        ResourceObject(type, id?.toString(), attributes: renamedMap);
 
     final document = Document(ResourceData(resource)).toJson();
 
