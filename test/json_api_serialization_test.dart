@@ -177,7 +177,7 @@ void main() async {
   });
 
   test(
-      'deserialize with hasmany relationship (and included) (and fieldForKey override)',
+      'deserialize with hasmany relationship (and included), fieldForKey override, singular/plural included types',
       () {
     final graphMock = container.read(graphProvider);
     when(graphMock.getKeyForId('models', '1',
@@ -229,7 +229,7 @@ void main() async {
           'attributes': {'name': 'Zombie'},
         },
         {
-          'type': 'cities',
+          'type': 'city',
           'id': '1',
           'attributes': {'name': 'Manila'},
         },
@@ -289,5 +289,31 @@ void main() async {
           .having((m) => m.name, 'name', 'Hector')
           .having((m) => m.id, 'id', '19'),
     );
+  });
+
+  test('deserialize with missing type', () {
+    try {
+      container.read(modelRemoteAdapterProvider).deserialize({
+        'data': {
+          'type': 'model',
+          'id': '19',
+          'attributes': {'name': 'Hector'},
+        },
+        'included': [
+          {
+            'type': 'd23dewd',
+            'id': '2',
+            'attributes': {'name': 'Z'},
+          }
+        ],
+      });
+    } catch (e) {
+      expect(
+          e,
+          isA<DataException>()
+              .having((e) => e, 'error', isA<DataException>())
+              .having((e) => e.toString(), 'message',
+                  contains('Type `d23dewd` not found')));
+    }
   });
 }
