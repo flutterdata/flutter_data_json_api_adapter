@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## [0.2.0-rc3] - 2020-03-19
+## [0.2.0-rc4] - 2020-03-22
 
+- Fix singular and missing types
 - Fix `keyForField` in serialize attributes
 - Support and test overridable remote `type`, null relationships
 - Add guard to `BelongsTo` serialization
