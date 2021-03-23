@@ -291,29 +291,20 @@ void main() async {
     );
   });
 
-  test('deserialize with missing type', () {
-    try {
-      container.read(modelRemoteAdapterProvider).deserialize({
-        'data': {
-          'type': 'model',
-          'id': '19',
-          'attributes': {'name': 'Hector'},
-        },
-        'included': [
-          {
-            'type': 'd23dewd',
-            'id': '2',
-            'attributes': {'name': 'Z'},
-          }
-        ],
-      });
-    } catch (e) {
-      expect(
-          e,
-          isA<DataException>()
-              .having((e) => e, 'error', isA<DataException>())
-              .having((e) => e.toString(), 'message',
-                  contains('Type `d23dewd` not found')));
-    }
+  test('missing type in deserialize should be ignored (not fail)', () {
+    container.read(modelRemoteAdapterProvider).deserialize({
+      'data': {
+        'type': 'model',
+        'id': '19',
+        'attributes': {'name': 'Hector'},
+      },
+      'included': [
+        {
+          'type': 'd23dewd',
+          'id': '2',
+          'attributes': {'name': 'Z'},
+        }
+      ],
+    });
   });
 }

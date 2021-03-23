@@ -125,9 +125,11 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     if (collectionData?.included != null) {
       for (final include in collectionData.included) {
         final _internalType = _internalTypeFor(include.type);
-        final model =
-            adapters[_internalType]?.deserialize(include, init: init)?.model;
-        result.included.add(model);
+        if (adapters.containsKey(_internalType)) {
+          final model =
+              adapters[_internalType].deserialize(include, init: init).model;
+          result.included.add(model);
+        }
       }
     }
 
@@ -175,10 +177,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   String _internalTypeFor(String type) {
     final _a = adapters.values.where((adapter) =>
         adapter.type == type || adapter.type == DataHelpers.getType(type));
-    return _a.isNotEmpty
-        ? _a.first.internalType
-        : throw DataException(
-            'Type `$type` not found. Please override `type` in the corresponding adapter and make it return `$type`.');
+    return _a.isNotEmpty ? _a.first.internalType : DataHelpers.getType(type);
   }
 
   String _typeFor(String internalType) {
