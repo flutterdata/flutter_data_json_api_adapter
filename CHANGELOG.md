@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [0.2.0-rc4] - 2020-03-22
+## [0.2.0-rc5]
 
 - Fix singular and missing types
 - Fix `keyForField` in serialize attributes
