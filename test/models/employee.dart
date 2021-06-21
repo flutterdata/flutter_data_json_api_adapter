@@ -9,11 +9,11 @@ part 'employee.g.dart';
 
 @freezed
 @DataRepository([JSONAPIAdapter, TestMixin, EmployeeMixin])
-abstract class Employee with DataModel<Employee>, _$Employee {
+class Employee with DataModel<Employee>, _$Employee {
   Employee._();
   factory Employee({
-    String id,
-    String name,
+    required String id,
+    required String name,
   }) = _Employee;
 
   factory Employee.fromJson(Map<String, dynamic> json) =>

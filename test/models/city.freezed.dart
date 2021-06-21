@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'city.dart';
 
@@ -8,6 +8,10 @@ part of 'city.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
 City _$CityFromJson(Map<String, dynamic> json) {
   return _City.fromJson(json);
 }
@@ -16,31 +20,29 @@ City _$CityFromJson(Map<String, dynamic> json) {
 class _$CityTearOff {
   const _$CityTearOff();
 
-// ignore: unused_element
-  _City call({String id, String name}) {
+  _City call({required String id, required String name}) {
     return _City(
       id: id,
       name: name,
     );
   }
 
-// ignore: unused_element
   City fromJson(Map<String, Object> json) {
     return City.fromJson(json);
   }
 }
 
 /// @nodoc
-// ignore: unused_element
 const $City = _$CityTearOff();
 
 /// @nodoc
 mixin _$City {
-  String get id;
-  String get name;
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
-  $CityCopyWith<City> get copyWith;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $CityCopyWith<City> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -60,12 +62,18 @@ class _$CityCopyWithImpl<$Res> implements $CityCopyWith<$Res> {
 
   @override
   $Res call({
-    Object id = freezed,
-    Object name = freezed,
+    Object? id = freezed,
+    Object? name = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed ? _value.id : id as String,
-      name: name == freezed ? _value.name : name as String,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -89,21 +97,26 @@ class __$CityCopyWithImpl<$Res> extends _$CityCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object id = freezed,
-    Object name = freezed,
+    Object? id = freezed,
+    Object? name = freezed,
   }) {
     return _then(_City(
-      id: id == freezed ? _value.id : id as String,
-      name: name == freezed ? _value.name : name as String,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_City extends _City {
-  _$_City({this.id, this.name}) : super._();
+  _$_City({required this.id, required this.name}) : super._();
 
   factory _$_City.fromJson(Map<String, dynamic> json) =>
       _$_$_CityFromJson(json);
@@ -134,6 +147,7 @@ class _$_City extends _City {
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(name);
 
+  @JsonKey(ignore: true)
   @override
   _$CityCopyWith<_City> get copyWith =>
       __$CityCopyWithImpl<_City>(this, _$identity);
@@ -145,15 +159,16 @@ class _$_City extends _City {
 }
 
 abstract class _City extends City {
+  factory _City({required String id, required String name}) = _$_City;
   _City._() : super._();
-  factory _City({String id, String name}) = _$_City;
 
   factory _City.fromJson(Map<String, dynamic> json) = _$_City.fromJson;
 
   @override
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
-  String get name;
+  String get name => throw _privateConstructorUsedError;
   @override
-  _$CityCopyWith<_City> get copyWith;
+  @JsonKey(ignore: true)
+  _$CityCopyWith<_City> get copyWith => throw _privateConstructorUsedError;
 }

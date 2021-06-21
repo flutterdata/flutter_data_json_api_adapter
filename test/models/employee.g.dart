@@ -27,7 +27,7 @@ Map<String, dynamic> _$_$_EmployeeToJson(_$_Employee instance) =>
 
 mixin $EmployeeLocalAdapter on LocalAdapter<Employee> {
   @override
-  Map<String, Map<String, Object>> relationshipsFor([Employee model]) => {};
+  Map<String, Map<String, Object?>> relationshipsFor([Employee? model]) => {};
 
   @override
   Employee deserialize(map) {
@@ -52,30 +52,33 @@ class $EmployeeRemoteAdapter = RemoteAdapter<Employee>
 
 //
 
-final employeeLocalAdapterProvider =
+final employeesLocalAdapterProvider =
     Provider<LocalAdapter<Employee>>((ref) => $EmployeeHiveLocalAdapter(ref));
 
-final employeeRemoteAdapterProvider = Provider<RemoteAdapter<Employee>>(
-    (ref) => $EmployeeRemoteAdapter(ref.read(employeeLocalAdapterProvider)));
+final employeesRemoteAdapterProvider = Provider<RemoteAdapter<Employee>>(
+    (ref) => $EmployeeRemoteAdapter(ref.read(employeesLocalAdapterProvider)));
 
-final employeeRepositoryProvider =
+final employeesRepositoryProvider =
     Provider<Repository<Employee>>((ref) => Repository<Employee>(ref));
 
-final _watchEmployee = StateNotifierProvider.autoDispose
-    .family<DataStateNotifier<Employee>, WatchArgs<Employee>>((ref, args) {
-  return ref.watch(employeeRepositoryProvider).watchOne(args.id,
+final _watchEmployee = StateNotifierProvider.autoDispose.family<
+    DataStateNotifier<Employee?>,
+    DataState<Employee?>,
+    WatchArgs<Employee>>((ref, args) {
+  return ref.read(employeesRepositoryProvider).watchOne(args.id,
       remote: args.remote,
       params: args.params,
       headers: args.headers,
       alsoWatch: args.alsoWatch);
 });
 
-AutoDisposeStateNotifierProvider<DataStateNotifier<Employee>> watchEmployee(
-    dynamic id,
-    {bool remote = true,
-    Map<String, dynamic> params = const {},
-    Map<String, String> headers = const {},
-    AlsoWatch<Employee> alsoWatch}) {
+AutoDisposeStateNotifierProvider<DataStateNotifier<Employee?>,
+        DataState<Employee?>>
+    watchEmployee(dynamic id,
+        {bool? remote,
+        Map<String, dynamic>? params,
+        Map<String, String>? headers,
+        AlsoWatch<Employee>? alsoWatch}) {
   return _watchEmployee(WatchArgs(
       id: id,
       remote: remote,
@@ -84,11 +87,12 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<Employee>> watchEmployee(
       alsoWatch: alsoWatch));
 }
 
-final _watchEmployees = StateNotifierProvider.autoDispose
-    .family<DataStateNotifier<List<Employee>>, WatchArgs<Employee>>(
-        (ref, args) {
+final _watchEmployees = StateNotifierProvider.autoDispose.family<
+    DataStateNotifier<List<Employee>>,
+    DataState<List<Employee>>,
+    WatchArgs<Employee>>((ref, args) {
   ref.maintainState = false;
-  return ref.watch(employeeRepositoryProvider).watchAll(
+  return ref.read(employeesRepositoryProvider).watchAll(
       remote: args.remote,
       params: args.params,
       headers: args.headers,
@@ -96,11 +100,12 @@ final _watchEmployees = StateNotifierProvider.autoDispose
       syncLocal: args.syncLocal);
 });
 
-AutoDisposeStateNotifierProvider<DataStateNotifier<List<Employee>>>
+AutoDisposeStateNotifierProvider<DataStateNotifier<List<Employee>>,
+        DataState<List<Employee>>>
     watchEmployees(
-        {bool remote,
-        Map<String, dynamic> params,
-        Map<String, String> headers}) {
+        {bool? remote,
+        Map<String, dynamic>? params,
+        Map<String, String>? headers}) {
   return _watchEmployees(
       WatchArgs(remote: remote, params: params, headers: headers));
 }
@@ -111,7 +116,7 @@ extension EmployeeX on Employee {
   ///
   /// Can be obtained via `context.read`, `ref.read`, `container.read`
   Employee init(Reader read) {
-    final repository = internalLocatorFn(employeeRepositoryProvider, read);
+    final repository = internalLocatorFn(employeesRepositoryProvider, read);
     return repository.remoteAdapter.initializeModel(this, save: true);
   }
 }

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.3.0]
+
+- Upgrade to null-safety
+
 ## [0.2.0-rc5]
 
 - Fix singular and missing types

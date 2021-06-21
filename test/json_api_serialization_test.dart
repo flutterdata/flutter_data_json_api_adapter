@@ -9,50 +9,63 @@ import 'models/employee.dart';
 import 'models/model.dart';
 import 'test.data.dart';
 
-class GraphNotifierMock extends Mock implements GraphNotifier {}
-
 void main() async {
-  ProviderContainer container;
+  late final ProviderContainer container;
 
-  RemoteAdapter<Model> modelRemoteAdapter;
-  RemoteAdapter<City> cityRemoteAdapter;
-  RemoteAdapter<Company> companyRemoteAdapter;
-  Map<String, RemoteAdapter<DataModel>> adapters;
+  late final RemoteAdapter<Model> modelsRemoteAdapter;
+  late final RemoteAdapter<City> citiesRemoteAdapter;
+  late final RemoteAdapter<Company> companiesRemoteAdapter;
+  late final Map<String, RemoteAdapter<DataModel>> adapters;
 
-  setUp(() async {
+  setUpAll(() async {
     container = ProviderContainer(
       overrides: [
         ...flutterDataTestOverrides,
-        graphProvider.overrideWithValue(GraphNotifierMock()),
+        graphNotifierProvider.overrideWithValue(GraphNotifierMock()),
       ],
     );
 
     adapters = {
-      'models': container.read(modelRemoteAdapterProvider),
-      'cities': container.read(cityRemoteAdapterProvider),
-      'companies': container.read(companyRemoteAdapterProvider),
-      'employees': container.read(employeeRemoteAdapterProvider),
+      'models': container.read(modelsRemoteAdapterProvider),
+      'cities': container.read(citiesRemoteAdapterProvider),
+      'companies': container.read(companiesRemoteAdapterProvider),
+      'employees': container.read(employeesRemoteAdapterProvider),
     };
 
     // stub check for graph for offline
-    final graph = container.read(graphProvider);
+    final graph = container.read(graphNotifierProvider) as GraphNotifierMock;
     when(graph.hasNode(argThat(startsWith('_offline')))).thenReturn(true);
 
-    modelRemoteAdapter = await container
-        .read(modelRemoteAdapterProvider)
-        .initialize(adapters: adapters);
-    cityRemoteAdapter = await container
-        .read(cityRemoteAdapterProvider)
-        .initialize(adapters: adapters);
-    companyRemoteAdapter = await container
-        .read(companyRemoteAdapterProvider)
-        .initialize(adapters: adapters);
+    when(graph.getKeyForId(captureAny, captureAny,
+            keyIfAbsent: captureAnyNamed('keyIfAbsent')))
+        .thenAnswer((i) => i.positionalArguments.join('#'));
+
+    final ref = container.read(_refProvider);
+
+    modelsRemoteAdapter = await container
+        .read(modelsRemoteAdapterProvider)
+        .initialize(adapters: adapters, ref: ref);
+    citiesRemoteAdapter = await container
+        .read(citiesRemoteAdapterProvider)
+        .initialize(adapters: adapters, ref: ref);
+    companiesRemoteAdapter = await container
+        .read(companiesRemoteAdapterProvider)
+        .initialize(adapters: adapters, ref: ref);
+    await container
+        .read(employeesRemoteAdapterProvider)
+        .initialize(adapters: adapters, ref: ref);
   });
 
   test('serialize', () {
-    final company =
-        Company(id: '23', name: 'Ko', updatedAt: DateTime.parse('2020-02-02'));
-    expect(companyRemoteAdapter.serialize(company), {
+    final company = Company(
+      id: '23',
+      name: 'Ko',
+      updatedAt: DateTime.parse('2020-02-02'),
+    );
+
+    final map = companiesRemoteAdapter.serialize(company);
+
+    expect(map, {
       'data': {
         'type': 'companies',
         'id': '23',
@@ -67,7 +80,7 @@ void main() async {
         name: 'Ko',
         company: Company(id: '1', name: 'Co').asBelongsTo);
 
-    expect(modelRemoteAdapter.serialize(person), {
+    expect(modelsRemoteAdapter.serialize(person), {
       'data': {
         'type': 'models',
         'id': '23',
@@ -80,11 +93,11 @@ void main() async {
       }
     });
 
-    final person2 =
-        Model(id: '23', name: 'Ko', company: Company(id: null).asBelongsTo);
+    final person2 = Model(
+        id: '23', name: 'Ko', company: Company(id: null, name: '').asBelongsTo);
 
     // ignores null relationships
-    expect(modelRemoteAdapter.serialize(person2), {
+    expect(modelsRemoteAdapter.serialize(person2), {
       'data': {
         'type': 'models',
         'id': '23',
@@ -104,7 +117,7 @@ void main() async {
           Model(id: '2', name: 'B')
         }.asHasMany);
 
-    expect(companyRemoteAdapter.serialize(c), {
+    expect(companiesRemoteAdapter.serialize(c), {
       'data': {
         'type': 'companies',
         'id': '1',
@@ -127,7 +140,7 @@ void main() async {
   });
 
   test('deserialize multiple', () {
-    final cities = cityRemoteAdapter.deserialize({
+    final cities = citiesRemoteAdapter.deserialize({
       'data': [
         {
           'type': 'cities',
@@ -149,11 +162,7 @@ void main() async {
   });
 
   test('deserialize with belongsto relationship', () {
-    when(container.read(graphProvider).getKeyForId('companies', '1',
-            keyIfAbsent: anyNamed('keyIfAbsent')))
-        .thenReturn('companies#a1');
-
-    final model = modelRemoteAdapter.deserialize({
+    final model = modelsRemoteAdapter.deserialize({
       'data': {
         'type': 'models',
         'id': '1',
@@ -164,7 +173,7 @@ void main() async {
           }
         }
       }
-    }).model;
+    }).model!;
 
     expect(
       model,
@@ -172,28 +181,16 @@ void main() async {
           .having((m) => m.name, 'name', 'Ka')
           .having((m) => m.id, 'id', '1'),
     );
-    // need to check on key as model/relationships are not initialized
-    expect(model.company.key, 'companies#a1');
+
+    // check rel type - we can't check the ID as it's graph-based
+    // ignore: invalid_use_of_protected_member
+    expect(model.company!.internalType, 'companies');
   });
 
   test(
       'deserialize with hasmany relationship (and included), fieldForKey override, singular/plural included types',
       () {
-    final graphMock = container.read(graphProvider);
-    when(graphMock.getKeyForId('models', '1',
-            keyIfAbsent: anyNamed('keyIfAbsent')))
-        .thenReturn('models#a1');
-    when(graphMock.getKeyForId('models', '2',
-            keyIfAbsent: anyNamed('keyIfAbsent')))
-        .thenReturn('models#a2');
-    when(graphMock.getKeyForId('employees', '1',
-            keyIfAbsent: anyNamed('keyIfAbsent')))
-        .thenReturn('employees#e1');
-    when(graphMock.getKeyForId('employees', '2',
-            keyIfAbsent: anyNamed('keyIfAbsent')))
-        .thenReturn('employees#e2');
-
-    final data = companyRemoteAdapter.deserialize({
+    final data = companiesRemoteAdapter.deserialize({
       'data': {
         'type': 'companies',
         'id': '19',
@@ -244,9 +241,9 @@ void main() async {
           'attributes': {'name': 'August'},
         },
       ]
-    }, init: false);
+    });
 
-    final company = data.model;
+    final company = data.model!;
     final models = data.included;
 
     expect(
@@ -257,9 +254,12 @@ void main() async {
               DateTime.parse('2020-12-12 12:00'))
           .having((m) => m.id, 'id', '19'),
     );
-    // need to check on keys as model/relationships are not initialized
-    expect(company.models.keys, {'models#a1', 'models#a2'});
-    expect(company.employees.keys, {'employees#e1', 'employees#e2'});
+
+    // check rel type - we can't check IDs as it's graph-based
+    // ignore: invalid_use_of_protected_member
+    expect(company.models!.internalType, 'models');
+    // ignore: invalid_use_of_protected_member
+    expect(company.employees!.internalType, 'employees');
 
     expect(models, [
       isA<Model>(),
@@ -271,11 +271,7 @@ void main() async {
   });
 
   test('deserialize with overidden type', () {
-    when(container.read(graphProvider).getKeyForId('employees', '1',
-            keyIfAbsent: anyNamed('keyIfAbsent')))
-        .thenReturn('employees#e1');
-
-    final model = container.read(employeeRemoteAdapterProvider).deserialize({
+    final model = container.read(employeesRemoteAdapterProvider).deserialize({
       'data': {
         'type': 'workers',
         'id': '19',
@@ -292,7 +288,7 @@ void main() async {
   });
 
   test('missing type in deserialize should be ignored (not fail)', () {
-    container.read(modelRemoteAdapterProvider).deserialize({
+    container.read(modelsRemoteAdapterProvider).deserialize({
       'data': {
         'type': 'model',
         'id': '19',
@@ -307,4 +303,19 @@ void main() async {
       ],
     });
   });
+}
+
+final _refProvider = Provider<ProviderReference>((ref) => ref);
+
+class GraphNotifierMock extends Mock implements GraphNotifier {
+  @override
+  bool hasNode(String? key) {
+    return (super.noSuchMethod(Invocation.method(#hasNode, [key]),
+        returnValue: false) as bool);
+  }
+
+  @override
+  String? getKeyForId(String? type, dynamic id, {String? keyIfAbsent}) =>
+      (super.noSuchMethod(Invocation.method(
+          #getKeyForId, [type, id], {#keyIfAbsent: keyIfAbsent})) as String?);
 }

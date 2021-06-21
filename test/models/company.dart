@@ -11,15 +11,15 @@ part 'company.g.dart';
 
 @freezed
 @DataRepository([JSONAPIAdapter, TestMixin, CaseMixin])
-abstract class Company with DataModel<Company>, _$Company {
+class Company with DataModel<Company>, _$Company {
   Company._();
   factory Company({
-    String id,
-    String name,
-    String nasdaq,
-    DateTime updatedAt,
-    HasMany<Model> models,
-    @JsonKey(name: 'w') HasMany<Employee> employees,
+    String? id,
+    required String name,
+    String? nasdaq,
+    DateTime? updatedAt,
+    HasMany<Model>? models,
+    @JsonKey(name: 'w') HasMany<Employee>? employees,
   }) = _Company;
 
   factory Company.fromJson(Map<String, dynamic> json) =>

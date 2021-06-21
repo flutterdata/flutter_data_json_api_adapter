@@ -8,9 +8,9 @@ part of 'company.dart';
 
 _$_Company _$_$_CompanyFromJson(Map<String, dynamic> json) {
   return _$_Company(
-    id: json['id'] as String,
+    id: json['id'] as String?,
     name: json['name'] as String,
-    nasdaq: json['nasdaq'] as String,
+    nasdaq: json['nasdaq'] as String?,
     updatedAt: json['updatedAt'] == null
         ? null
         : DateTime.parse(json['updatedAt'] as String),
@@ -41,7 +41,7 @@ Map<String, dynamic> _$_$_CompanyToJson(_$_Company instance) =>
 
 mixin $CompanyLocalAdapter on LocalAdapter<Company> {
   @override
-  Map<String, Map<String, Object>> relationshipsFor([Company model]) => {
+  Map<String, Map<String, Object?>> relationshipsFor([Company? model]) => {
         'models': {
           'name': 'models',
           'inverse': 'company',
@@ -80,30 +80,33 @@ class $CompanyRemoteAdapter = RemoteAdapter<Company>
 
 //
 
-final companyLocalAdapterProvider =
+final companiesLocalAdapterProvider =
     Provider<LocalAdapter<Company>>((ref) => $CompanyHiveLocalAdapter(ref));
 
-final companyRemoteAdapterProvider = Provider<RemoteAdapter<Company>>(
-    (ref) => $CompanyRemoteAdapter(ref.read(companyLocalAdapterProvider)));
+final companiesRemoteAdapterProvider = Provider<RemoteAdapter<Company>>(
+    (ref) => $CompanyRemoteAdapter(ref.read(companiesLocalAdapterProvider)));
 
-final companyRepositoryProvider =
+final companiesRepositoryProvider =
     Provider<Repository<Company>>((ref) => Repository<Company>(ref));
 
-final _watchCompany = StateNotifierProvider.autoDispose
-    .family<DataStateNotifier<Company>, WatchArgs<Company>>((ref, args) {
-  return ref.watch(companyRepositoryProvider).watchOne(args.id,
+final _watchCompany = StateNotifierProvider.autoDispose.family<
+    DataStateNotifier<Company?>,
+    DataState<Company?>,
+    WatchArgs<Company>>((ref, args) {
+  return ref.read(companiesRepositoryProvider).watchOne(args.id,
       remote: args.remote,
       params: args.params,
       headers: args.headers,
       alsoWatch: args.alsoWatch);
 });
 
-AutoDisposeStateNotifierProvider<DataStateNotifier<Company>> watchCompany(
-    dynamic id,
-    {bool remote = true,
-    Map<String, dynamic> params = const {},
-    Map<String, String> headers = const {},
-    AlsoWatch<Company> alsoWatch}) {
+AutoDisposeStateNotifierProvider<DataStateNotifier<Company?>,
+        DataState<Company?>>
+    watchCompany(dynamic id,
+        {bool? remote,
+        Map<String, dynamic>? params,
+        Map<String, String>? headers,
+        AlsoWatch<Company>? alsoWatch}) {
   return _watchCompany(WatchArgs(
       id: id,
       remote: remote,
@@ -112,10 +115,12 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<Company>> watchCompany(
       alsoWatch: alsoWatch));
 }
 
-final _watchCompanies = StateNotifierProvider.autoDispose
-    .family<DataStateNotifier<List<Company>>, WatchArgs<Company>>((ref, args) {
+final _watchCompanies = StateNotifierProvider.autoDispose.family<
+    DataStateNotifier<List<Company>>,
+    DataState<List<Company>>,
+    WatchArgs<Company>>((ref, args) {
   ref.maintainState = false;
-  return ref.watch(companyRepositoryProvider).watchAll(
+  return ref.read(companiesRepositoryProvider).watchAll(
       remote: args.remote,
       params: args.params,
       headers: args.headers,
@@ -123,11 +128,12 @@ final _watchCompanies = StateNotifierProvider.autoDispose
       syncLocal: args.syncLocal);
 });
 
-AutoDisposeStateNotifierProvider<DataStateNotifier<List<Company>>>
+AutoDisposeStateNotifierProvider<DataStateNotifier<List<Company>>,
+        DataState<List<Company>>>
     watchCompanies(
-        {bool remote,
-        Map<String, dynamic> params,
-        Map<String, String> headers}) {
+        {bool? remote,
+        Map<String, dynamic>? params,
+        Map<String, String>? headers}) {
   return _watchCompanies(
       WatchArgs(remote: remote, params: params, headers: headers));
 }
@@ -138,7 +144,7 @@ extension CompanyX on Company {
   ///
   /// Can be obtained via `context.read`, `ref.read`, `container.read`
   Company init(Reader read) {
-    final repository = internalLocatorFn(companyRepositoryProvider, read);
+    final repository = internalLocatorFn(companiesRepositoryProvider, read);
     return repository.remoteAdapter.initializeModel(this, save: true);
   }
 }

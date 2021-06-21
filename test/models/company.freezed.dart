@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'company.dart';
 
@@ -8,6 +8,10 @@ part of 'company.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
 Company _$CompanyFromJson(Map<String, dynamic> json) {
   return _Company.fromJson(json);
 }
@@ -16,14 +20,13 @@ Company _$CompanyFromJson(Map<String, dynamic> json) {
 class _$CompanyTearOff {
   const _$CompanyTearOff();
 
-// ignore: unused_element
   _Company call(
-      {String id,
-      String name,
-      String nasdaq,
-      DateTime updatedAt,
-      HasMany<Model> models,
-      @JsonKey(name: 'w') HasMany<Employee> employees}) {
+      {String? id,
+      required String name,
+      String? nasdaq,
+      DateTime? updatedAt,
+      HasMany<Model>? models,
+      @JsonKey(name: 'w') HasMany<Employee>? employees}) {
     return _Company(
       id: id,
       name: name,
@@ -34,28 +37,27 @@ class _$CompanyTearOff {
     );
   }
 
-// ignore: unused_element
   Company fromJson(Map<String, Object> json) {
     return Company.fromJson(json);
   }
 }
 
 /// @nodoc
-// ignore: unused_element
 const $Company = _$CompanyTearOff();
 
 /// @nodoc
 mixin _$Company {
-  String get id;
-  String get name;
-  String get nasdaq;
-  DateTime get updatedAt;
-  HasMany<Model> get models;
+  String? get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
+  String? get nasdaq => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
+  HasMany<Model>? get models => throw _privateConstructorUsedError;
   @JsonKey(name: 'w')
-  HasMany<Employee> get employees;
+  HasMany<Employee>? get employees => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
-  $CompanyCopyWith<Company> get copyWith;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $CompanyCopyWith<Company> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -63,12 +65,12 @@ abstract class $CompanyCopyWith<$Res> {
   factory $CompanyCopyWith(Company value, $Res Function(Company) then) =
       _$CompanyCopyWithImpl<$Res>;
   $Res call(
-      {String id,
+      {String? id,
       String name,
-      String nasdaq,
-      DateTime updatedAt,
-      HasMany<Model> models,
-      @JsonKey(name: 'w') HasMany<Employee> employees});
+      String? nasdaq,
+      DateTime? updatedAt,
+      HasMany<Model>? models,
+      @JsonKey(name: 'w') HasMany<Employee>? employees});
 }
 
 /// @nodoc
@@ -81,23 +83,38 @@ class _$CompanyCopyWithImpl<$Res> implements $CompanyCopyWith<$Res> {
 
   @override
   $Res call({
-    Object id = freezed,
-    Object name = freezed,
-    Object nasdaq = freezed,
-    Object updatedAt = freezed,
-    Object models = freezed,
-    Object employees = freezed,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? nasdaq = freezed,
+    Object? updatedAt = freezed,
+    Object? models = freezed,
+    Object? employees = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed ? _value.id : id as String,
-      name: name == freezed ? _value.name : name as String,
-      nasdaq: nasdaq == freezed ? _value.nasdaq : nasdaq as String,
-      updatedAt:
-          updatedAt == freezed ? _value.updatedAt : updatedAt as DateTime,
-      models: models == freezed ? _value.models : models as HasMany<Model>,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      nasdaq: nasdaq == freezed
+          ? _value.nasdaq
+          : nasdaq // ignore: cast_nullable_to_non_nullable
+              as String?,
+      updatedAt: updatedAt == freezed
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      models: models == freezed
+          ? _value.models
+          : models // ignore: cast_nullable_to_non_nullable
+              as HasMany<Model>?,
       employees: employees == freezed
           ? _value.employees
-          : employees as HasMany<Employee>,
+          : employees // ignore: cast_nullable_to_non_nullable
+              as HasMany<Employee>?,
     ));
   }
 }
@@ -108,12 +125,12 @@ abstract class _$CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
       __$CompanyCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String id,
+      {String? id,
       String name,
-      String nasdaq,
-      DateTime updatedAt,
-      HasMany<Model> models,
-      @JsonKey(name: 'w') HasMany<Employee> employees});
+      String? nasdaq,
+      DateTime? updatedAt,
+      HasMany<Model>? models,
+      @JsonKey(name: 'w') HasMany<Employee>? employees});
 }
 
 /// @nodoc
@@ -127,34 +144,48 @@ class __$CompanyCopyWithImpl<$Res> extends _$CompanyCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object id = freezed,
-    Object name = freezed,
-    Object nasdaq = freezed,
-    Object updatedAt = freezed,
-    Object models = freezed,
-    Object employees = freezed,
+    Object? id = freezed,
+    Object? name = freezed,
+    Object? nasdaq = freezed,
+    Object? updatedAt = freezed,
+    Object? models = freezed,
+    Object? employees = freezed,
   }) {
     return _then(_Company(
-      id: id == freezed ? _value.id : id as String,
-      name: name == freezed ? _value.name : name as String,
-      nasdaq: nasdaq == freezed ? _value.nasdaq : nasdaq as String,
-      updatedAt:
-          updatedAt == freezed ? _value.updatedAt : updatedAt as DateTime,
-      models: models == freezed ? _value.models : models as HasMany<Model>,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String?,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      nasdaq: nasdaq == freezed
+          ? _value.nasdaq
+          : nasdaq // ignore: cast_nullable_to_non_nullable
+              as String?,
+      updatedAt: updatedAt == freezed
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      models: models == freezed
+          ? _value.models
+          : models // ignore: cast_nullable_to_non_nullable
+              as HasMany<Model>?,
       employees: employees == freezed
           ? _value.employees
-          : employees as HasMany<Employee>,
+          : employees // ignore: cast_nullable_to_non_nullable
+              as HasMany<Employee>?,
     ));
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_Company extends _Company {
   _$_Company(
       {this.id,
-      this.name,
+      required this.name,
       this.nasdaq,
       this.updatedAt,
       this.models,
@@ -165,18 +196,18 @@ class _$_Company extends _Company {
       _$_$_CompanyFromJson(json);
 
   @override
-  final String id;
+  final String? id;
   @override
   final String name;
   @override
-  final String nasdaq;
+  final String? nasdaq;
   @override
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
   @override
-  final HasMany<Model> models;
+  final HasMany<Model>? models;
   @override
   @JsonKey(name: 'w')
-  final HasMany<Employee> employees;
+  final HasMany<Employee>? employees;
 
   @override
   String toString() {
@@ -213,6 +244,7 @@ class _$_Company extends _Company {
       const DeepCollectionEquality().hash(models) ^
       const DeepCollectionEquality().hash(employees);
 
+  @JsonKey(ignore: true)
   @override
   _$CompanyCopyWith<_Company> get copyWith =>
       __$CompanyCopyWithImpl<_Company>(this, _$identity);
@@ -224,30 +256,32 @@ class _$_Company extends _Company {
 }
 
 abstract class _Company extends Company {
-  _Company._() : super._();
   factory _Company(
-      {String id,
-      String name,
-      String nasdaq,
-      DateTime updatedAt,
-      HasMany<Model> models,
-      @JsonKey(name: 'w') HasMany<Employee> employees}) = _$_Company;
+      {String? id,
+      required String name,
+      String? nasdaq,
+      DateTime? updatedAt,
+      HasMany<Model>? models,
+      @JsonKey(name: 'w') HasMany<Employee>? employees}) = _$_Company;
+  _Company._() : super._();
 
   factory _Company.fromJson(Map<String, dynamic> json) = _$_Company.fromJson;
 
   @override
-  String get id;
+  String? get id => throw _privateConstructorUsedError;
   @override
-  String get name;
+  String get name => throw _privateConstructorUsedError;
   @override
-  String get nasdaq;
+  String? get nasdaq => throw _privateConstructorUsedError;
   @override
-  DateTime get updatedAt;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
   @override
-  HasMany<Model> get models;
+  HasMany<Model>? get models => throw _privateConstructorUsedError;
   @override
   @JsonKey(name: 'w')
-  HasMany<Employee> get employees;
+  HasMany<Employee>? get employees => throw _privateConstructorUsedError;
   @override
-  _$CompanyCopyWith<_Company> get copyWith;
+  @JsonKey(ignore: true)
+  _$CompanyCopyWith<_Company> get copyWith =>
+      throw _privateConstructorUsedError;
 }

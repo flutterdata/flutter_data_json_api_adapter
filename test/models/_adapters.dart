@@ -17,7 +17,7 @@ mixin TestMixin<T extends DataModel<T>> on RemoteAdapter<T> {
       {'x-client-id': '2473272'};
 
   // test random method
-  Future<T> loginTest(T model) {
+  Future<T?> loginTest(T model) async {
     return null;
   }
 }

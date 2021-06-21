@@ -45,27 +45,27 @@ class TestCompanyRemoteAdapter = $CompanyRemoteAdapter with TestRemoteAdapter;
 final flutterDataTestOverrides = [
   hiveLocalStorageProvider
     .overrideWithProvider(Provider((_) => TestHiveLocalStorage())),
-  graphProvider.overrideWithProvider(Provider(
+  graphNotifierProvider.overrideWithProvider(Provider(
     (ref) => TestDataGraphNotifier(ref.read(hiveLocalStorageProvider)))),
-  cityLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
+  citiesLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
     $TestCityLocalAdapter(ref))),
-cityRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-    TestCityRemoteAdapter(ref.read(cityLocalAdapterProvider)))),
+citiesRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
+    TestCityRemoteAdapter(ref.read(citiesLocalAdapterProvider)))),
 
-employeeLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
+employeesLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
     $TestEmployeeLocalAdapter(ref))),
-employeeRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-    TestEmployeeRemoteAdapter(ref.read(employeeLocalAdapterProvider)))),
+employeesRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
+    TestEmployeeRemoteAdapter(ref.read(employeesLocalAdapterProvider)))),
 
-modelLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
+modelsLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
     $TestModelLocalAdapter(ref))),
-modelRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-    TestModelRemoteAdapter(ref.read(modelLocalAdapterProvider)))),
+modelsRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
+    TestModelRemoteAdapter(ref.read(modelsLocalAdapterProvider)))),
 
-companyLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
+companiesLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
     $TestCompanyLocalAdapter(ref))),
-companyRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-    TestCompanyRemoteAdapter(ref.read(companyLocalAdapterProvider)))),
+companiesRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
+    TestCompanyRemoteAdapter(ref.read(companiesLocalAdapterProvider)))),
 
 ];
 
@@ -75,23 +75,16 @@ class FakeBox<T> extends Fake implements Box<T> {
   final _map = <dynamic, T>{};
 
   @override
-  bool isOpen = false;
+  bool isOpen = true;
 
   @override
-  T get(key, {T defaultValue}) {
+  T? get(key, {T? defaultValue}) {
     return _map[key] ?? defaultValue;
   }
 
   @override
   Future<void> put(key, T value) async {
     _map[key] = value;
-  }
-
-  @override
-  Future<void> putAll(Map<dynamic, T> entries) async {
-    for (final key in entries.keys) {
-      await put(key, entries[key]);
-    }
   }
 
   @override
@@ -132,7 +125,9 @@ class FakeBox<T> extends Fake implements Box<T> {
   }
 
   @override
-  Future<void> close() => Future.value();
+  Future<void> close() async {
+    isOpen = false;
+  }
 }
 
 class HiveMock extends Mock implements HiveInterface {
@@ -153,8 +148,8 @@ mixin TestMetaBox on GraphNotifier {
   @override
   // ignore: must_call_super
   Future<GraphNotifier> initialize() async {
-    await super.initialize();
     box = FakeBox<Map>();
+    await super.initialize();
     return this;
   }
 }
@@ -166,7 +161,7 @@ class TestHiveLocalStorage extends HiveLocalStorage {
   HiveInterface get hive => HiveMock();
 
   @override
-  HiveAesCipher get encryptionCipher => null;
+  HiveAesCipher? get encryptionCipher => null;
 
   @override
   Future<String> Function() get baseDirFn => () async => '';
@@ -176,9 +171,8 @@ mixin TestHiveLocalAdapter<T extends DataModel<T>> on HiveLocalAdapter<T> {
   @override
   // ignore: must_call_super
   Future<TestHiveLocalAdapter<T>> initialize() async {
-    await graph.initialize();
-    await super.initialize();
     box = FakeBox<T>();
+    await super.initialize();
     return this;
   }
 }
@@ -193,7 +187,13 @@ mixin TestRemoteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   @override
   http.Client get httpClient {
     return MockClient((req) async {
-      return ref.watch(mockResponseProvider(req));
+      try {
+        return ref.watch(mockResponseProvider(req));
+      } on ProviderException catch (e) {
+        // unwrap provider exception
+        // ignore: only_throw_errors
+        throw e.exception;
+      }
     });
   }
 }

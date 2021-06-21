@@ -1,5 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
 
 part of 'employee.dart';
 
@@ -8,6 +8,10 @@ part of 'employee.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+
 Employee _$EmployeeFromJson(Map<String, dynamic> json) {
   return _Employee.fromJson(json);
 }
@@ -16,31 +20,30 @@ Employee _$EmployeeFromJson(Map<String, dynamic> json) {
 class _$EmployeeTearOff {
   const _$EmployeeTearOff();
 
-// ignore: unused_element
-  _Employee call({String id, String name}) {
+  _Employee call({required String id, required String name}) {
     return _Employee(
       id: id,
       name: name,
     );
   }
 
-// ignore: unused_element
   Employee fromJson(Map<String, Object> json) {
     return Employee.fromJson(json);
   }
 }
 
 /// @nodoc
-// ignore: unused_element
 const $Employee = _$EmployeeTearOff();
 
 /// @nodoc
 mixin _$Employee {
-  String get id;
-  String get name;
+  String get id => throw _privateConstructorUsedError;
+  String get name => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson();
-  $EmployeeCopyWith<Employee> get copyWith;
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $EmployeeCopyWith<Employee> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -60,12 +63,18 @@ class _$EmployeeCopyWithImpl<$Res> implements $EmployeeCopyWith<$Res> {
 
   @override
   $Res call({
-    Object id = freezed,
-    Object name = freezed,
+    Object? id = freezed,
+    Object? name = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed ? _value.id : id as String,
-      name: name == freezed ? _value.name : name as String,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -89,21 +98,26 @@ class __$EmployeeCopyWithImpl<$Res> extends _$EmployeeCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object id = freezed,
-    Object name = freezed,
+    Object? id = freezed,
+    Object? name = freezed,
   }) {
     return _then(_Employee(
-      id: id == freezed ? _value.id : id as String,
-      name: name == freezed ? _value.name : name as String,
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      name: name == freezed
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
 
-@JsonSerializable()
-
 /// @nodoc
+@JsonSerializable()
 class _$_Employee extends _Employee {
-  _$_Employee({this.id, this.name}) : super._();
+  _$_Employee({required this.id, required this.name}) : super._();
 
   factory _$_Employee.fromJson(Map<String, dynamic> json) =>
       _$_$_EmployeeFromJson(json);
@@ -134,6 +148,7 @@ class _$_Employee extends _Employee {
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(name);
 
+  @JsonKey(ignore: true)
   @override
   _$EmployeeCopyWith<_Employee> get copyWith =>
       __$EmployeeCopyWithImpl<_Employee>(this, _$identity);
@@ -145,15 +160,17 @@ class _$_Employee extends _Employee {
 }
 
 abstract class _Employee extends Employee {
+  factory _Employee({required String id, required String name}) = _$_Employee;
   _Employee._() : super._();
-  factory _Employee({String id, String name}) = _$_Employee;
 
   factory _Employee.fromJson(Map<String, dynamic> json) = _$_Employee.fromJson;
 
   @override
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
-  String get name;
+  String get name => throw _privateConstructorUsedError;
   @override
-  _$EmployeeCopyWith<_Employee> get copyWith;
+  @JsonKey(ignore: true)
+  _$EmployeeCopyWith<_Employee> get copyWith =>
+      throw _privateConstructorUsedError;
 }

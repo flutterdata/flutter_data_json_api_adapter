@@ -26,7 +26,7 @@ Map<String, dynamic> _$_$_CityToJson(_$_City instance) => <String, dynamic>{
 
 mixin $CityLocalAdapter on LocalAdapter<City> {
   @override
-  Map<String, Map<String, Object>> relationshipsFor([City model]) => {};
+  Map<String, Map<String, Object?>> relationshipsFor([City? model]) => {};
 
   @override
   City deserialize(map) {
@@ -50,29 +50,31 @@ class $CityRemoteAdapter = RemoteAdapter<City>
 
 //
 
-final cityLocalAdapterProvider =
+final citiesLocalAdapterProvider =
     Provider<LocalAdapter<City>>((ref) => $CityHiveLocalAdapter(ref));
 
-final cityRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
-    (ref) => $CityRemoteAdapter(ref.read(cityLocalAdapterProvider)));
+final citiesRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
+    (ref) => $CityRemoteAdapter(ref.read(citiesLocalAdapterProvider)));
 
-final cityRepositoryProvider =
+final citiesRepositoryProvider =
     Provider<Repository<City>>((ref) => Repository<City>(ref));
 
 final _watchCity = StateNotifierProvider.autoDispose
-    .family<DataStateNotifier<City>, WatchArgs<City>>((ref, args) {
-  return ref.watch(cityRepositoryProvider).watchOne(args.id,
+    .family<DataStateNotifier<City?>, DataState<City?>, WatchArgs<City>>(
+        (ref, args) {
+  return ref.read(citiesRepositoryProvider).watchOne(args.id,
       remote: args.remote,
       params: args.params,
       headers: args.headers,
       alsoWatch: args.alsoWatch);
 });
 
-AutoDisposeStateNotifierProvider<DataStateNotifier<City>> watchCity(dynamic id,
-    {bool remote = true,
-    Map<String, dynamic> params = const {},
-    Map<String, String> headers = const {},
-    AlsoWatch<City> alsoWatch}) {
+AutoDisposeStateNotifierProvider<DataStateNotifier<City?>, DataState<City?>>
+    watchCity(dynamic id,
+        {bool? remote,
+        Map<String, dynamic>? params,
+        Map<String, String>? headers,
+        AlsoWatch<City>? alsoWatch}) {
   return _watchCity(WatchArgs(
       id: id,
       remote: remote,
@@ -81,10 +83,12 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<City>> watchCity(dynamic id,
       alsoWatch: alsoWatch));
 }
 
-final _watchCities = StateNotifierProvider.autoDispose
-    .family<DataStateNotifier<List<City>>, WatchArgs<City>>((ref, args) {
+final _watchCities = StateNotifierProvider.autoDispose.family<
+    DataStateNotifier<List<City>>,
+    DataState<List<City>>,
+    WatchArgs<City>>((ref, args) {
   ref.maintainState = false;
-  return ref.watch(cityRepositoryProvider).watchAll(
+  return ref.read(citiesRepositoryProvider).watchAll(
       remote: args.remote,
       params: args.params,
       headers: args.headers,
@@ -92,8 +96,12 @@ final _watchCities = StateNotifierProvider.autoDispose
       syncLocal: args.syncLocal);
 });
 
-AutoDisposeStateNotifierProvider<DataStateNotifier<List<City>>> watchCities(
-    {bool remote, Map<String, dynamic> params, Map<String, String> headers}) {
+AutoDisposeStateNotifierProvider<DataStateNotifier<List<City>>,
+        DataState<List<City>>>
+    watchCities(
+        {bool? remote,
+        Map<String, dynamic>? params,
+        Map<String, String>? headers}) {
   return _watchCities(
       WatchArgs(remote: remote, params: params, headers: headers));
 }
@@ -104,7 +112,7 @@ extension CityX on City {
   ///
   /// Can be obtained via `context.read`, `ref.read`, `container.read`
   City init(Reader read) {
-    final repository = internalLocatorFn(cityRepositoryProvider, read);
+    final repository = internalLocatorFn(citiesRepositoryProvider, read);
     return repository.remoteAdapter.initializeModel(this, save: true);
   }
 }

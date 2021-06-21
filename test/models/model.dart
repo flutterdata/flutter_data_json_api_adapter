@@ -11,9 +11,9 @@ part 'model.g.dart';
 @DataRepository([JSONAPIAdapter, TestMixin])
 class Model with DataModel<Model> {
   @override
-  final String id;
-  final String name;
-  final BelongsTo<Company> company;
+  final String? id;
+  final String? name;
+  final BelongsTo<Company>? company;
 
   Model({this.id, this.name, this.company});
 }

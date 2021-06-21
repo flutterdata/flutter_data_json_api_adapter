@@ -9,11 +9,11 @@ part 'city.g.dart';
 
 @freezed
 @DataRepository([JSONAPIAdapter, TestMixin])
-abstract class City with DataModel<City>, _$City {
+class City with DataModel<City>, _$City {
   City._();
   factory City({
-    String id,
-    String name,
+    required String id,
+    required String name,
   }) = _City;
 
   factory City.fromJson(Map<String, dynamic> json) => _$CityFromJson(json);
