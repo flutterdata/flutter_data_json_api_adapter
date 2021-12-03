@@ -66,7 +66,8 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
       }
       if (map[field] is BelongsTo) {
         if (map[field].value?.id != null) {
-          relationships[key] = ToOne(Identifier(_type, map[field].value.id));
+          relationships[key] =
+              ToOne(Identifier(_type, map[field].value.id.toString()));
         }
       }
       map.remove(field);
@@ -81,7 +82,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     );
 
     // assemble type, id, attributes, relationships in `Resource`
-    final resource = Resource(internalType, id);
+    final resource = Resource(internalType, id.toString());
     resource.attributes.addAll(attributes);
     resource.relationships.addAll(relationships);
 
@@ -102,7 +103,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     if (data is! Iterable<Resource>) {
       // if data is not already formatted, parse
       try {
-        final inbound = InboundDocument(data);
+        final inbound = InboundDocument(data as Map);
         final isSingle = inbound.json['data'] is Map;
         if (isSingle) {
           collection.add(inbound.dataAsResource());

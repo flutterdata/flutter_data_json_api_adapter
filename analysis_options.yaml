@@ -1,0 +1,10 @@
+include: package:pedantic/analysis_options.yaml
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+  strong-mode:
+    implicit-casts: false
+  errors:
+    invalid_use_of_protected_member: error
+    always_declare_return_types: error
