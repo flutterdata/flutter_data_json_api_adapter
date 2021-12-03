@@ -6,15 +6,14 @@ part of 'model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Model _$ModelFromJson(Map<String, dynamic> json) {
-  return Model(
-    id: json['id'] as String?,
-    name: json['name'] as String?,
-    company: json['company'] == null
-        ? null
-        : BelongsTo.fromJson(json['company'] as Map<String, dynamic>),
-  );
-}
+Model _$ModelFromJson(Map<String, dynamic> json) => Model(
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+      company: json['company'] == null
+          ? null
+          : BelongsTo<Company>.fromJson(
+              json['company'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$ModelToJson(Model instance) => <String, dynamic>{
       'id': instance.id,
@@ -63,18 +62,18 @@ class $ModelRemoteAdapter = RemoteAdapter<Model>
 //
 
 final modelsLocalAdapterProvider =
-    Provider<LocalAdapter<Model>>((ref) => $ModelHiveLocalAdapter(ref));
+    Provider<LocalAdapter<Model>>((ref) => $ModelHiveLocalAdapter(ref.read));
 
 final modelsRemoteAdapterProvider = Provider<RemoteAdapter<Model>>(
-    (ref) => $ModelRemoteAdapter(ref.read(modelsLocalAdapterProvider)));
+    (ref) => $ModelRemoteAdapter(ref.watch(modelsLocalAdapterProvider)));
 
-final modelsRepositoryProvider =
-    Provider<Repository<Model>>((ref) => Repository<Model>(ref));
+final modelsRepositoryProvider = Provider<Repository<Model>>(
+    (ref) => Repository<Model>(ref.read, modelProvider, modelsProvider));
 
-final _watchModel = StateNotifierProvider.autoDispose
+final _modelProvider = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<Model?>, DataState<Model?>, WatchArgs<Model>>(
         (ref, args) {
-  return ref.read(modelsRepositoryProvider).watchOne(args.id,
+  return ref.watch(modelsRepositoryProvider).watchOneNotifier(args.id,
       remote: args.remote,
       params: args.params,
       headers: args.headers,
@@ -82,12 +81,12 @@ final _watchModel = StateNotifierProvider.autoDispose
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<Model?>, DataState<Model?>>
-    watchModel(dynamic id,
+    modelProvider(dynamic id,
         {bool? remote,
         Map<String, dynamic>? params,
         Map<String, String>? headers,
         AlsoWatch<Model>? alsoWatch}) {
-  return _watchModel(WatchArgs(
+  return _modelProvider(WatchArgs(
       id: id,
       remote: remote,
       params: params,
@@ -95,36 +94,37 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<Model?>, DataState<Model?>>
       alsoWatch: alsoWatch));
 }
 
-final _watchModels = StateNotifierProvider.autoDispose.family<
+final _modelsProvider = StateNotifierProvider.autoDispose.family<
     DataStateNotifier<List<Model>>,
     DataState<List<Model>>,
     WatchArgs<Model>>((ref, args) {
-  ref.maintainState = false;
-  return ref.read(modelsRepositoryProvider).watchAll(
+  return ref.watch(modelsRepositoryProvider).watchAllNotifier(
       remote: args.remote,
       params: args.params,
       headers: args.headers,
-      filterLocal: args.filterLocal,
       syncLocal: args.syncLocal);
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<List<Model>>,
         DataState<List<Model>>>
-    watchModels(
+    modelsProvider(
         {bool? remote,
         Map<String, dynamic>? params,
-        Map<String, String>? headers}) {
-  return _watchModels(
-      WatchArgs(remote: remote, params: params, headers: headers));
+        Map<String, String>? headers,
+        bool? syncLocal}) {
+  return _modelsProvider(WatchArgs(
+      remote: remote, params: params, headers: headers, syncLocal: syncLocal));
 }
 
 extension ModelX on Model {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
-  /// Can be obtained via `context.read`, `ref.read`, `container.read`
-  Model init(Reader read) {
+  /// Can be obtained via `ref.read`, `container.read`
+  Model init(Reader read, {bool save = true}) {
     final repository = internalLocatorFn(modelsRepositoryProvider, read);
-    return repository.remoteAdapter.initializeModel(this, save: true);
+    final updatedModel =
+        repository.remoteAdapter.initializeModel(this, save: save);
+    return save ? updatedModel : this;
   }
 }

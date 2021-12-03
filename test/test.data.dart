@@ -46,26 +46,26 @@ final flutterDataTestOverrides = [
   hiveLocalStorageProvider
     .overrideWithProvider(Provider((_) => TestHiveLocalStorage())),
   graphNotifierProvider.overrideWithProvider(Provider(
-    (ref) => TestDataGraphNotifier(ref.read(hiveLocalStorageProvider)))),
+    (ref) => TestDataGraphNotifier(ref.watch(hiveLocalStorageProvider)))),
   citiesLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
-    $TestCityLocalAdapter(ref))),
+    $TestCityLocalAdapter(ref.read))),
 citiesRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-    TestCityRemoteAdapter(ref.read(citiesLocalAdapterProvider)))),
+    TestCityRemoteAdapter(ref.watch(citiesLocalAdapterProvider)))),
 
 employeesLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
-    $TestEmployeeLocalAdapter(ref))),
+    $TestEmployeeLocalAdapter(ref.read))),
 employeesRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-    TestEmployeeRemoteAdapter(ref.read(employeesLocalAdapterProvider)))),
+    TestEmployeeRemoteAdapter(ref.watch(employeesLocalAdapterProvider)))),
 
 modelsLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
-    $TestModelLocalAdapter(ref))),
+    $TestModelLocalAdapter(ref.read))),
 modelsRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-    TestModelRemoteAdapter(ref.read(modelsLocalAdapterProvider)))),
+    TestModelRemoteAdapter(ref.watch(modelsLocalAdapterProvider)))),
 
 companiesLocalAdapterProvider.overrideWithProvider(Provider((ref) =>
-    $TestCompanyLocalAdapter(ref))),
+    $TestCompanyLocalAdapter(ref.read))),
 companiesRemoteAdapterProvider.overrideWithProvider(Provider((ref) =>
-    TestCompanyRemoteAdapter(ref.read(companiesLocalAdapterProvider)))),
+    TestCompanyRemoteAdapter(ref.watch(companiesLocalAdapterProvider)))),
 
 ];
 
@@ -188,7 +188,7 @@ mixin TestRemoteAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   http.Client get httpClient {
     return MockClient((req) async {
       try {
-        return ref.watch(mockResponseProvider(req));
+        return read(mockResponseProvider(req));
       } on ProviderException catch (e) {
         // unwrap provider exception
         // ignore: only_throw_errors

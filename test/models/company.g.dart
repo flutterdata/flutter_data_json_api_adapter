@@ -6,24 +6,22 @@ part of 'company.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Company _$_$_CompanyFromJson(Map<String, dynamic> json) {
-  return _$_Company(
-    id: json['id'] as String?,
-    name: json['name'] as String,
-    nasdaq: json['nasdaq'] as String?,
-    updatedAt: json['updatedAt'] == null
-        ? null
-        : DateTime.parse(json['updatedAt'] as String),
-    models: json['models'] == null
-        ? null
-        : HasMany.fromJson(json['models'] as Map<String, dynamic>),
-    employees: json['w'] == null
-        ? null
-        : HasMany.fromJson(json['w'] as Map<String, dynamic>),
-  );
-}
+_$_Company _$$_CompanyFromJson(Map<String, dynamic> json) => _$_Company(
+      id: json['id'] as String?,
+      name: json['name'] as String,
+      nasdaq: json['nasdaq'] as String?,
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
+      models: json['models'] == null
+          ? null
+          : HasMany<Model>.fromJson(json['models'] as Map<String, dynamic>),
+      employees: json['w'] == null
+          ? null
+          : HasMany<Employee>.fromJson(json['w'] as Map<String, dynamic>),
+    );
 
-Map<String, dynamic> _$_$_CompanyToJson(_$_Company instance) =>
+Map<String, dynamic> _$$_CompanyToJson(_$_Company instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
@@ -80,20 +78,20 @@ class $CompanyRemoteAdapter = RemoteAdapter<Company>
 
 //
 
-final companiesLocalAdapterProvider =
-    Provider<LocalAdapter<Company>>((ref) => $CompanyHiveLocalAdapter(ref));
+final companiesLocalAdapterProvider = Provider<LocalAdapter<Company>>(
+    (ref) => $CompanyHiveLocalAdapter(ref.read));
 
 final companiesRemoteAdapterProvider = Provider<RemoteAdapter<Company>>(
-    (ref) => $CompanyRemoteAdapter(ref.read(companiesLocalAdapterProvider)));
+    (ref) => $CompanyRemoteAdapter(ref.watch(companiesLocalAdapterProvider)));
 
-final companiesRepositoryProvider =
-    Provider<Repository<Company>>((ref) => Repository<Company>(ref));
+final companiesRepositoryProvider = Provider<Repository<Company>>(
+    (ref) => Repository<Company>(ref.read, companyProvider, companiesProvider));
 
-final _watchCompany = StateNotifierProvider.autoDispose.family<
+final _companyProvider = StateNotifierProvider.autoDispose.family<
     DataStateNotifier<Company?>,
     DataState<Company?>,
     WatchArgs<Company>>((ref, args) {
-  return ref.read(companiesRepositoryProvider).watchOne(args.id,
+  return ref.watch(companiesRepositoryProvider).watchOneNotifier(args.id,
       remote: args.remote,
       params: args.params,
       headers: args.headers,
@@ -102,12 +100,12 @@ final _watchCompany = StateNotifierProvider.autoDispose.family<
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<Company?>,
         DataState<Company?>>
-    watchCompany(dynamic id,
+    companyProvider(dynamic id,
         {bool? remote,
         Map<String, dynamic>? params,
         Map<String, String>? headers,
         AlsoWatch<Company>? alsoWatch}) {
-  return _watchCompany(WatchArgs(
+  return _companyProvider(WatchArgs(
       id: id,
       remote: remote,
       params: params,
@@ -115,36 +113,37 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<Company?>,
       alsoWatch: alsoWatch));
 }
 
-final _watchCompanies = StateNotifierProvider.autoDispose.family<
+final _companiesProvider = StateNotifierProvider.autoDispose.family<
     DataStateNotifier<List<Company>>,
     DataState<List<Company>>,
     WatchArgs<Company>>((ref, args) {
-  ref.maintainState = false;
-  return ref.read(companiesRepositoryProvider).watchAll(
+  return ref.watch(companiesRepositoryProvider).watchAllNotifier(
       remote: args.remote,
       params: args.params,
       headers: args.headers,
-      filterLocal: args.filterLocal,
       syncLocal: args.syncLocal);
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<List<Company>>,
         DataState<List<Company>>>
-    watchCompanies(
+    companiesProvider(
         {bool? remote,
         Map<String, dynamic>? params,
-        Map<String, String>? headers}) {
-  return _watchCompanies(
-      WatchArgs(remote: remote, params: params, headers: headers));
+        Map<String, String>? headers,
+        bool? syncLocal}) {
+  return _companiesProvider(WatchArgs(
+      remote: remote, params: params, headers: headers, syncLocal: syncLocal));
 }
 
 extension CompanyX on Company {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
-  /// Can be obtained via `context.read`, `ref.read`, `container.read`
-  Company init(Reader read) {
+  /// Can be obtained via `ref.read`, `container.read`
+  Company init(Reader read, {bool save = true}) {
     final repository = internalLocatorFn(companiesRepositoryProvider, read);
-    return repository.remoteAdapter.initializeModel(this, save: true);
+    final updatedModel =
+        repository.remoteAdapter.initializeModel(this, save: save);
+    return save ? updatedModel : this;
   }
 }

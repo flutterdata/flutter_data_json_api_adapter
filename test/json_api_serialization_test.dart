@@ -20,7 +20,9 @@ void main() async {
   setUpAll(() async {
     container = ProviderContainer(
       overrides: [
-        ...flutterDataTestOverrides,
+        // NOTE we need to remove the override in `flutterDataTestOverrides`
+        // in order to override with value; bad design Riverpod!
+        ...flutterDataTestOverrides..removeAt(1),
         graphNotifierProvider.overrideWithValue(GraphNotifierMock()),
       ],
     );
@@ -44,16 +46,16 @@ void main() async {
 
     modelsRemoteAdapter = await container
         .read(modelsRemoteAdapterProvider)
-        .initialize(adapters: adapters, ref: ref);
+        .initialize(adapters: adapters, read: ref.read);
     citiesRemoteAdapter = await container
         .read(citiesRemoteAdapterProvider)
-        .initialize(adapters: adapters, ref: ref);
+        .initialize(adapters: adapters, read: ref.read);
     companiesRemoteAdapter = await container
         .read(companiesRemoteAdapterProvider)
-        .initialize(adapters: adapters, ref: ref);
+        .initialize(adapters: adapters, read: ref.read);
     await container
         .read(employeesRemoteAdapterProvider)
-        .initialize(adapters: adapters, ref: ref);
+        .initialize(adapters: adapters, read: ref.read);
   });
 
   test('serialize', () {
@@ -305,7 +307,7 @@ void main() async {
   });
 }
 
-final _refProvider = Provider<ProviderReference>((ref) => ref);
+final _refProvider = Provider<Ref>((ref) => ref);
 
 class GraphNotifierMock extends Mock implements GraphNotifier {
   @override

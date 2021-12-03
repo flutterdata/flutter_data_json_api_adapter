@@ -6,14 +6,12 @@ part of 'city.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_City _$_$_CityFromJson(Map<String, dynamic> json) {
-  return _$_City(
-    id: json['id'] as String,
-    name: json['name'] as String,
-  );
-}
+_$_City _$$_CityFromJson(Map<String, dynamic> json) => _$_City(
+      id: json['id'] as String,
+      name: json['name'] as String,
+    );
 
-Map<String, dynamic> _$_$_CityToJson(_$_City instance) => <String, dynamic>{
+Map<String, dynamic> _$$_CityToJson(_$_City instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
     };
@@ -51,18 +49,18 @@ class $CityRemoteAdapter = RemoteAdapter<City>
 //
 
 final citiesLocalAdapterProvider =
-    Provider<LocalAdapter<City>>((ref) => $CityHiveLocalAdapter(ref));
+    Provider<LocalAdapter<City>>((ref) => $CityHiveLocalAdapter(ref.read));
 
 final citiesRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
-    (ref) => $CityRemoteAdapter(ref.read(citiesLocalAdapterProvider)));
+    (ref) => $CityRemoteAdapter(ref.watch(citiesLocalAdapterProvider)));
 
-final citiesRepositoryProvider =
-    Provider<Repository<City>>((ref) => Repository<City>(ref));
+final citiesRepositoryProvider = Provider<Repository<City>>(
+    (ref) => Repository<City>(ref.read, cityProvider, citiesProvider));
 
-final _watchCity = StateNotifierProvider.autoDispose
+final _cityProvider = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<City?>, DataState<City?>, WatchArgs<City>>(
         (ref, args) {
-  return ref.read(citiesRepositoryProvider).watchOne(args.id,
+  return ref.watch(citiesRepositoryProvider).watchOneNotifier(args.id,
       remote: args.remote,
       params: args.params,
       headers: args.headers,
@@ -70,12 +68,12 @@ final _watchCity = StateNotifierProvider.autoDispose
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<City?>, DataState<City?>>
-    watchCity(dynamic id,
+    cityProvider(dynamic id,
         {bool? remote,
         Map<String, dynamic>? params,
         Map<String, String>? headers,
         AlsoWatch<City>? alsoWatch}) {
-  return _watchCity(WatchArgs(
+  return _cityProvider(WatchArgs(
       id: id,
       remote: remote,
       params: params,
@@ -83,36 +81,37 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<City?>, DataState<City?>>
       alsoWatch: alsoWatch));
 }
 
-final _watchCities = StateNotifierProvider.autoDispose.family<
+final _citiesProvider = StateNotifierProvider.autoDispose.family<
     DataStateNotifier<List<City>>,
     DataState<List<City>>,
     WatchArgs<City>>((ref, args) {
-  ref.maintainState = false;
-  return ref.read(citiesRepositoryProvider).watchAll(
+  return ref.watch(citiesRepositoryProvider).watchAllNotifier(
       remote: args.remote,
       params: args.params,
       headers: args.headers,
-      filterLocal: args.filterLocal,
       syncLocal: args.syncLocal);
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<List<City>>,
         DataState<List<City>>>
-    watchCities(
+    citiesProvider(
         {bool? remote,
         Map<String, dynamic>? params,
-        Map<String, String>? headers}) {
-  return _watchCities(
-      WatchArgs(remote: remote, params: params, headers: headers));
+        Map<String, String>? headers,
+        bool? syncLocal}) {
+  return _citiesProvider(WatchArgs(
+      remote: remote, params: params, headers: headers, syncLocal: syncLocal));
 }
 
 extension CityX on City {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
-  /// Can be obtained via `context.read`, `ref.read`, `container.read`
-  City init(Reader read) {
+  /// Can be obtained via `ref.read`, `container.read`
+  City init(Reader read, {bool save = true}) {
     final repository = internalLocatorFn(citiesRepositoryProvider, read);
-    return repository.remoteAdapter.initializeModel(this, save: true);
+    final updatedModel =
+        repository.remoteAdapter.initializeModel(this, save: save);
+    return save ? updatedModel : this;
   }
 }

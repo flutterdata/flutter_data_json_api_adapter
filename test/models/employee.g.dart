@@ -6,14 +6,12 @@ part of 'employee.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_Employee _$_$_EmployeeFromJson(Map<String, dynamic> json) {
-  return _$_Employee(
-    id: json['id'] as String,
-    name: json['name'] as String,
-  );
-}
+_$_Employee _$$_EmployeeFromJson(Map<String, dynamic> json) => _$_Employee(
+      id: json['id'] as String,
+      name: json['name'] as String,
+    );
 
-Map<String, dynamic> _$_$_EmployeeToJson(_$_Employee instance) =>
+Map<String, dynamic> _$$_EmployeeToJson(_$_Employee instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
@@ -52,20 +50,20 @@ class $EmployeeRemoteAdapter = RemoteAdapter<Employee>
 
 //
 
-final employeesLocalAdapterProvider =
-    Provider<LocalAdapter<Employee>>((ref) => $EmployeeHiveLocalAdapter(ref));
+final employeesLocalAdapterProvider = Provider<LocalAdapter<Employee>>(
+    (ref) => $EmployeeHiveLocalAdapter(ref.read));
 
 final employeesRemoteAdapterProvider = Provider<RemoteAdapter<Employee>>(
-    (ref) => $EmployeeRemoteAdapter(ref.read(employeesLocalAdapterProvider)));
+    (ref) => $EmployeeRemoteAdapter(ref.watch(employeesLocalAdapterProvider)));
 
-final employeesRepositoryProvider =
-    Provider<Repository<Employee>>((ref) => Repository<Employee>(ref));
+final employeesRepositoryProvider = Provider<Repository<Employee>>((ref) =>
+    Repository<Employee>(ref.read, employeeProvider, employeesProvider));
 
-final _watchEmployee = StateNotifierProvider.autoDispose.family<
+final _employeeProvider = StateNotifierProvider.autoDispose.family<
     DataStateNotifier<Employee?>,
     DataState<Employee?>,
     WatchArgs<Employee>>((ref, args) {
-  return ref.read(employeesRepositoryProvider).watchOne(args.id,
+  return ref.watch(employeesRepositoryProvider).watchOneNotifier(args.id,
       remote: args.remote,
       params: args.params,
       headers: args.headers,
@@ -74,12 +72,12 @@ final _watchEmployee = StateNotifierProvider.autoDispose.family<
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<Employee?>,
         DataState<Employee?>>
-    watchEmployee(dynamic id,
+    employeeProvider(dynamic id,
         {bool? remote,
         Map<String, dynamic>? params,
         Map<String, String>? headers,
         AlsoWatch<Employee>? alsoWatch}) {
-  return _watchEmployee(WatchArgs(
+  return _employeeProvider(WatchArgs(
       id: id,
       remote: remote,
       params: params,
@@ -87,36 +85,37 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<Employee?>,
       alsoWatch: alsoWatch));
 }
 
-final _watchEmployees = StateNotifierProvider.autoDispose.family<
+final _employeesProvider = StateNotifierProvider.autoDispose.family<
     DataStateNotifier<List<Employee>>,
     DataState<List<Employee>>,
     WatchArgs<Employee>>((ref, args) {
-  ref.maintainState = false;
-  return ref.read(employeesRepositoryProvider).watchAll(
+  return ref.watch(employeesRepositoryProvider).watchAllNotifier(
       remote: args.remote,
       params: args.params,
       headers: args.headers,
-      filterLocal: args.filterLocal,
       syncLocal: args.syncLocal);
 });
 
 AutoDisposeStateNotifierProvider<DataStateNotifier<List<Employee>>,
         DataState<List<Employee>>>
-    watchEmployees(
+    employeesProvider(
         {bool? remote,
         Map<String, dynamic>? params,
-        Map<String, String>? headers}) {
-  return _watchEmployees(
-      WatchArgs(remote: remote, params: params, headers: headers));
+        Map<String, String>? headers,
+        bool? syncLocal}) {
+  return _employeesProvider(WatchArgs(
+      remote: remote, params: params, headers: headers, syncLocal: syncLocal));
 }
 
 extension EmployeeX on Employee {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
-  /// Can be obtained via `context.read`, `ref.read`, `container.read`
-  Employee init(Reader read) {
+  /// Can be obtained via `ref.read`, `container.read`
+  Employee init(Reader read, {bool save = true}) {
     final repository = internalLocatorFn(employeesRepositoryProvider, read);
-    return repository.remoteAdapter.initializeModel(this, save: true);
+    final updatedModel =
+        repository.remoteAdapter.initializeModel(this, save: save);
+    return save ? updatedModel : this;
   }
 }

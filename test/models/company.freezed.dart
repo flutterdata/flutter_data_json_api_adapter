@@ -1,5 +1,6 @@
+// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'company.dart';
 
@@ -51,7 +52,8 @@ mixin _$Company {
   String get name => throw _privateConstructorUsedError;
   String? get nasdaq => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
-  HasMany<Model>? get models => throw _privateConstructorUsedError;
+  HasMany<Model>? get models =>
+      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
   @JsonKey(name: 'w')
   HasMany<Employee>? get employees => throw _privateConstructorUsedError;
 
@@ -193,7 +195,7 @@ class _$_Company extends _Company {
       : super._();
 
   factory _$_Company.fromJson(Map<String, dynamic> json) =>
-      _$_$_CompanyFromJson(json);
+      _$$_CompanyFromJson(json);
 
   @override
   final String? id;
@@ -205,7 +207,7 @@ class _$_Company extends _Company {
   final DateTime? updatedAt;
   @override
   final HasMany<Model>? models;
-  @override
+  @override // ignore: invalid_annotation_target
   @JsonKey(name: 'w')
   final HasMany<Employee>? employees;
 
@@ -251,7 +253,7 @@ class _$_Company extends _Company {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$_$_CompanyToJson(this);
+    return _$$_CompanyToJson(this);
   }
 }
 
@@ -277,7 +279,7 @@ abstract class _Company extends Company {
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   @override
   HasMany<Model>? get models => throw _privateConstructorUsedError;
-  @override
+  @override // ignore: invalid_annotation_target
   @JsonKey(name: 'w')
   HasMany<Employee>? get employees => throw _privateConstructorUsedError;
   @override

@@ -19,6 +19,7 @@ class Company with DataModel<Company>, _$Company {
     String? nasdaq,
     DateTime? updatedAt,
     HasMany<Model>? models,
+    // ignore: invalid_annotation_target
     @JsonKey(name: 'w') HasMany<Employee>? employees,
   }) = _Company;
 
