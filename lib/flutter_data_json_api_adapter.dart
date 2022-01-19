@@ -96,8 +96,8 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
   /// Transforms JSON:API into native format (with included resources)
   @override
-  DeserializedData<T, DataModel> deserialize(dynamic data, {String? key}) {
-    final result = DeserializedData<T, DataModel>([], included: []);
+  DeserializedData<T> deserialize(Object? data, {String? key}) {
+    final result = DeserializedData<T>([], included: []);
     final collection = ResourceCollection();
 
     if (data is! Iterable<Resource>) {

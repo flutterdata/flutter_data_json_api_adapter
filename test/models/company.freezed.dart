@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'company.dart';
@@ -38,7 +39,7 @@ class _$CompanyTearOff {
     );
   }
 
-  Company fromJson(Map<String, Object> json) {
+  Company fromJson(Map<String, Object?> json) {
     return Company.fromJson(json);
   }
 }
@@ -219,32 +220,25 @@ class _$_Company extends _Company {
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _Company &&
-            (identical(other.id, id) ||
-                const DeepCollectionEquality().equals(other.id, id)) &&
-            (identical(other.name, name) ||
-                const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.nasdaq, nasdaq) ||
-                const DeepCollectionEquality().equals(other.nasdaq, nasdaq)) &&
-            (identical(other.updatedAt, updatedAt) ||
-                const DeepCollectionEquality()
-                    .equals(other.updatedAt, updatedAt)) &&
-            (identical(other.models, models) ||
-                const DeepCollectionEquality().equals(other.models, models)) &&
-            (identical(other.employees, employees) ||
-                const DeepCollectionEquality()
-                    .equals(other.employees, employees)));
+        (other.runtimeType == runtimeType &&
+            other is _Company &&
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.name, name) &&
+            const DeepCollectionEquality().equals(other.nasdaq, nasdaq) &&
+            const DeepCollectionEquality().equals(other.updatedAt, updatedAt) &&
+            const DeepCollectionEquality().equals(other.models, models) &&
+            const DeepCollectionEquality().equals(other.employees, employees));
   }
 
   @override
-  int get hashCode =>
-      runtimeType.hashCode ^
-      const DeepCollectionEquality().hash(id) ^
-      const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(nasdaq) ^
-      const DeepCollectionEquality().hash(updatedAt) ^
-      const DeepCollectionEquality().hash(models) ^
-      const DeepCollectionEquality().hash(employees);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(name),
+      const DeepCollectionEquality().hash(nasdaq),
+      const DeepCollectionEquality().hash(updatedAt),
+      const DeepCollectionEquality().hash(models),
+      const DeepCollectionEquality().hash(employees));
 
   @JsonKey(ignore: true)
   @override
@@ -270,18 +264,18 @@ abstract class _Company extends Company {
   factory _Company.fromJson(Map<String, dynamic> json) = _$_Company.fromJson;
 
   @override
-  String? get id => throw _privateConstructorUsedError;
+  String? get id;
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  String? get nasdaq => throw _privateConstructorUsedError;
+  String? get nasdaq;
   @override
-  DateTime? get updatedAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt;
   @override
-  HasMany<Model>? get models => throw _privateConstructorUsedError;
+  HasMany<Model>? get models;
   @override // ignore: invalid_annotation_target
   @JsonKey(name: 'w')
-  HasMany<Employee>? get employees => throw _privateConstructorUsedError;
+  HasMany<Employee>? get employees;
   @override
   @JsonKey(ignore: true)
   _$CompanyCopyWith<_Company> get copyWith =>

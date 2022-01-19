@@ -81,11 +81,12 @@ class $CompanyRemoteAdapter = RemoteAdapter<Company>
 final companiesLocalAdapterProvider = Provider<LocalAdapter<Company>>(
     (ref) => $CompanyHiveLocalAdapter(ref.read));
 
-final companiesRemoteAdapterProvider = Provider<RemoteAdapter<Company>>(
-    (ref) => $CompanyRemoteAdapter(ref.watch(companiesLocalAdapterProvider)));
+final companiesRemoteAdapterProvider = Provider<RemoteAdapter<Company>>((ref) =>
+    $CompanyRemoteAdapter(ref.watch(companiesLocalAdapterProvider),
+        companyProvider, companiesProvider));
 
-final companiesRepositoryProvider = Provider<Repository<Company>>(
-    (ref) => Repository<Company>(ref.read, companyProvider, companiesProvider));
+final companiesRepositoryProvider =
+    Provider<Repository<Company>>((ref) => Repository<Company>(ref.read));
 
 final _companyProvider = StateNotifierProvider.autoDispose.family<
     DataStateNotifier<Company?>,
@@ -135,7 +136,7 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<List<Company>>,
       remote: remote, params: params, headers: headers, syncLocal: syncLocal));
 }
 
-extension CompanyX on Company {
+extension CompanyDataX on Company {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
@@ -146,4 +147,11 @@ extension CompanyX on Company {
         repository.remoteAdapter.initializeModel(this, save: save);
     return save ? updatedModel : this;
   }
+}
+
+extension CompanyDataRepositoryX on Repository<Company> {
+  JSONAPIAdapter<Company> get jSONAPIAdapter =>
+      remoteAdapter as JSONAPIAdapter<Company>;
+  TestMixin<Company> get testMixin => remoteAdapter as TestMixin<Company>;
+  CaseMixin<Company> get caseMixin => remoteAdapter as CaseMixin<Company>;
 }

@@ -64,11 +64,12 @@ class $ModelRemoteAdapter = RemoteAdapter<Model>
 final modelsLocalAdapterProvider =
     Provider<LocalAdapter<Model>>((ref) => $ModelHiveLocalAdapter(ref.read));
 
-final modelsRemoteAdapterProvider = Provider<RemoteAdapter<Model>>(
-    (ref) => $ModelRemoteAdapter(ref.watch(modelsLocalAdapterProvider)));
+final modelsRemoteAdapterProvider = Provider<RemoteAdapter<Model>>((ref) =>
+    $ModelRemoteAdapter(
+        ref.watch(modelsLocalAdapterProvider), modelProvider, modelsProvider));
 
-final modelsRepositoryProvider = Provider<Repository<Model>>(
-    (ref) => Repository<Model>(ref.read, modelProvider, modelsProvider));
+final modelsRepositoryProvider =
+    Provider<Repository<Model>>((ref) => Repository<Model>(ref.read));
 
 final _modelProvider = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<Model?>, DataState<Model?>, WatchArgs<Model>>(
@@ -116,7 +117,7 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<List<Model>>,
       remote: remote, params: params, headers: headers, syncLocal: syncLocal));
 }
 
-extension ModelX on Model {
+extension ModelDataX on Model {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
@@ -127,4 +128,10 @@ extension ModelX on Model {
         repository.remoteAdapter.initializeModel(this, save: save);
     return save ? updatedModel : this;
   }
+}
+
+extension ModelDataRepositoryX on Repository<Model> {
+  JSONAPIAdapter<Model> get jSONAPIAdapter =>
+      remoteAdapter as JSONAPIAdapter<Model>;
+  TestMixin<Model> get testMixin => remoteAdapter as TestMixin<Model>;
 }

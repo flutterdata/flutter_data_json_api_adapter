@@ -54,10 +54,11 @@ final employeesLocalAdapterProvider = Provider<LocalAdapter<Employee>>(
     (ref) => $EmployeeHiveLocalAdapter(ref.read));
 
 final employeesRemoteAdapterProvider = Provider<RemoteAdapter<Employee>>(
-    (ref) => $EmployeeRemoteAdapter(ref.watch(employeesLocalAdapterProvider)));
+    (ref) => $EmployeeRemoteAdapter(ref.watch(employeesLocalAdapterProvider),
+        employeeProvider, employeesProvider));
 
-final employeesRepositoryProvider = Provider<Repository<Employee>>((ref) =>
-    Repository<Employee>(ref.read, employeeProvider, employeesProvider));
+final employeesRepositoryProvider =
+    Provider<Repository<Employee>>((ref) => Repository<Employee>(ref.read));
 
 final _employeeProvider = StateNotifierProvider.autoDispose.family<
     DataStateNotifier<Employee?>,
@@ -107,7 +108,7 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<List<Employee>>,
       remote: remote, params: params, headers: headers, syncLocal: syncLocal));
 }
 
-extension EmployeeX on Employee {
+extension EmployeeDataX on Employee {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
@@ -118,4 +119,11 @@ extension EmployeeX on Employee {
         repository.remoteAdapter.initializeModel(this, save: save);
     return save ? updatedModel : this;
   }
+}
+
+extension EmployeeDataRepositoryX on Repository<Employee> {
+  JSONAPIAdapter<Employee> get jSONAPIAdapter =>
+      remoteAdapter as JSONAPIAdapter<Employee>;
+  TestMixin<Employee> get testMixin => remoteAdapter as TestMixin<Employee>;
+  EmployeeMixin get employeeMixin => remoteAdapter as EmployeeMixin;
 }

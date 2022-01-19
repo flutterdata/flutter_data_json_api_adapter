@@ -51,11 +51,12 @@ class $CityRemoteAdapter = RemoteAdapter<City>
 final citiesLocalAdapterProvider =
     Provider<LocalAdapter<City>>((ref) => $CityHiveLocalAdapter(ref.read));
 
-final citiesRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
-    (ref) => $CityRemoteAdapter(ref.watch(citiesLocalAdapterProvider)));
+final citiesRemoteAdapterProvider = Provider<RemoteAdapter<City>>((ref) =>
+    $CityRemoteAdapter(
+        ref.watch(citiesLocalAdapterProvider), cityProvider, citiesProvider));
 
-final citiesRepositoryProvider = Provider<Repository<City>>(
-    (ref) => Repository<City>(ref.read, cityProvider, citiesProvider));
+final citiesRepositoryProvider =
+    Provider<Repository<City>>((ref) => Repository<City>(ref.read));
 
 final _cityProvider = StateNotifierProvider.autoDispose
     .family<DataStateNotifier<City?>, DataState<City?>, WatchArgs<City>>(
@@ -103,7 +104,7 @@ AutoDisposeStateNotifierProvider<DataStateNotifier<List<City>>,
       remote: remote, params: params, headers: headers, syncLocal: syncLocal));
 }
 
-extension CityX on City {
+extension CityDataX on City {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
   /// [save], [delete] and so on.
   ///
@@ -114,4 +115,10 @@ extension CityX on City {
         repository.remoteAdapter.initializeModel(this, save: save);
     return save ? updatedModel : this;
   }
+}
+
+extension CityDataRepositoryX on Repository<City> {
+  JSONAPIAdapter<City> get jSONAPIAdapter =>
+      remoteAdapter as JSONAPIAdapter<City>;
+  TestMixin<City> get testMixin => remoteAdapter as TestMixin<City>;
 }

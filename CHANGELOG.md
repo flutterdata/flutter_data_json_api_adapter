@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [0.5.0]
+
+- Upgrade dependencies to latest
+- Breaking changes to `deserialize` API signature
+
 ## [0.4.0]
 
 - Upgrade dependencies
