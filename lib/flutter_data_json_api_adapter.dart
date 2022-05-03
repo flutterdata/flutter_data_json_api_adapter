@@ -73,8 +73,8 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
       map.remove(field);
     }
 
-    // id (or generate one)
-    final id = map.remove('id') ?? DataHelpers.generateShortKey();
+    // id
+    final id = map.remove('id');
 
     // attributes: rename with `keyForField`
     final attributes = Map.fromEntries(
@@ -82,12 +82,12 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     );
 
     // assemble type, id, attributes, relationships in `Resource`
-    final resource = Resource(_typeFor(internalType), id.toString());
+    final resource = NewResource(_typeFor(internalType), id?.toString());
     resource.attributes.addAll(attributes);
     resource.relationships.addAll(relationships);
 
     // add resource to a document
-    final outbound = OutboundDataDocument.resource(resource).toJson();
+    final outbound = OutboundDataDocument.newResource(resource).toJson();
 
     // run decode/encode because `json_api`'s `toJson()`
     // DOES NOT return nested Map<String, dynamic>s as expected

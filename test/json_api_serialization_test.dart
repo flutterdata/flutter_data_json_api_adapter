@@ -36,7 +36,6 @@ void main() async {
     expect(map, {
       'data': {
         'type': 'companies',
-        'id': isNotNull,
         'attributes': {'name': 'Tao'}
       }
     });
