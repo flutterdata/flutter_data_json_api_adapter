@@ -40,69 +40,20 @@ mixin $CityLocalAdapter on LocalAdapter<City> {
   Map<String, dynamic> serialize(model) => model.toJson();
 }
 
+final _citiesFinders = <String, dynamic>{};
+
 // ignore: must_be_immutable
 class $CityHiveLocalAdapter = HiveLocalAdapter<City> with $CityLocalAdapter;
 
 class $CityRemoteAdapter = RemoteAdapter<City>
     with JSONAPIAdapter<City>, TestMixin<City>;
 
-//
-
-final citiesLocalAdapterProvider =
-    Provider<LocalAdapter<City>>((ref) => $CityHiveLocalAdapter(ref.read));
-
-final citiesRemoteAdapterProvider = Provider<RemoteAdapter<City>>((ref) =>
-    $CityRemoteAdapter(
-        ref.watch(citiesLocalAdapterProvider), cityProvider, citiesProvider));
+final internalCitiesRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
+    (ref) => $CityRemoteAdapter(
+        $CityHiveLocalAdapter(ref.read), InternalHolder(_citiesFinders)));
 
 final citiesRepositoryProvider =
     Provider<Repository<City>>((ref) => Repository<City>(ref.read));
-
-final _cityProvider = StateNotifierProvider.autoDispose
-    .family<DataStateNotifier<City?>, DataState<City?>, WatchArgs<City>>(
-        (ref, args) {
-  return ref.watch(citiesRepositoryProvider).watchOneNotifier(args.id,
-      remote: args.remote,
-      params: args.params,
-      headers: args.headers,
-      alsoWatch: args.alsoWatch);
-});
-
-AutoDisposeStateNotifierProvider<DataStateNotifier<City?>, DataState<City?>>
-    cityProvider(dynamic id,
-        {bool? remote,
-        Map<String, dynamic>? params,
-        Map<String, String>? headers,
-        AlsoWatch<City>? alsoWatch}) {
-  return _cityProvider(WatchArgs(
-      id: id,
-      remote: remote,
-      params: params,
-      headers: headers,
-      alsoWatch: alsoWatch));
-}
-
-final _citiesProvider = StateNotifierProvider.autoDispose.family<
-    DataStateNotifier<List<City>>,
-    DataState<List<City>>,
-    WatchArgs<City>>((ref, args) {
-  return ref.watch(citiesRepositoryProvider).watchAllNotifier(
-      remote: args.remote,
-      params: args.params,
-      headers: args.headers,
-      syncLocal: args.syncLocal);
-});
-
-AutoDisposeStateNotifierProvider<DataStateNotifier<List<City>>,
-        DataState<List<City>>>
-    citiesProvider(
-        {bool? remote,
-        Map<String, dynamic>? params,
-        Map<String, String>? headers,
-        bool? syncLocal}) {
-  return _citiesProvider(WatchArgs(
-      remote: remote, params: params, headers: headers, syncLocal: syncLocal));
-}
 
 extension CityDataX on City {
   /// Initializes "fresh" models (i.e. manually instantiated) to use

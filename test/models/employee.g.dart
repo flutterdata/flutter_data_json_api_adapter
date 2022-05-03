@@ -41,6 +41,8 @@ mixin $EmployeeLocalAdapter on LocalAdapter<Employee> {
   Map<String, dynamic> serialize(model) => model.toJson();
 }
 
+final _employeesFinders = <String, dynamic>{};
+
 // ignore: must_be_immutable
 class $EmployeeHiveLocalAdapter = HiveLocalAdapter<Employee>
     with $EmployeeLocalAdapter;
@@ -48,65 +50,13 @@ class $EmployeeHiveLocalAdapter = HiveLocalAdapter<Employee>
 class $EmployeeRemoteAdapter = RemoteAdapter<Employee>
     with JSONAPIAdapter<Employee>, TestMixin<Employee>, EmployeeMixin;
 
-//
-
-final employeesLocalAdapterProvider = Provider<LocalAdapter<Employee>>(
-    (ref) => $EmployeeHiveLocalAdapter(ref.read));
-
-final employeesRemoteAdapterProvider = Provider<RemoteAdapter<Employee>>(
-    (ref) => $EmployeeRemoteAdapter(ref.watch(employeesLocalAdapterProvider),
-        employeeProvider, employeesProvider));
+final internalEmployeesRemoteAdapterProvider =
+    Provider<RemoteAdapter<Employee>>((ref) => $EmployeeRemoteAdapter(
+        $EmployeeHiveLocalAdapter(ref.read),
+        InternalHolder(_employeesFinders)));
 
 final employeesRepositoryProvider =
     Provider<Repository<Employee>>((ref) => Repository<Employee>(ref.read));
-
-final _employeeProvider = StateNotifierProvider.autoDispose.family<
-    DataStateNotifier<Employee?>,
-    DataState<Employee?>,
-    WatchArgs<Employee>>((ref, args) {
-  return ref.watch(employeesRepositoryProvider).watchOneNotifier(args.id,
-      remote: args.remote,
-      params: args.params,
-      headers: args.headers,
-      alsoWatch: args.alsoWatch);
-});
-
-AutoDisposeStateNotifierProvider<DataStateNotifier<Employee?>,
-        DataState<Employee?>>
-    employeeProvider(dynamic id,
-        {bool? remote,
-        Map<String, dynamic>? params,
-        Map<String, String>? headers,
-        AlsoWatch<Employee>? alsoWatch}) {
-  return _employeeProvider(WatchArgs(
-      id: id,
-      remote: remote,
-      params: params,
-      headers: headers,
-      alsoWatch: alsoWatch));
-}
-
-final _employeesProvider = StateNotifierProvider.autoDispose.family<
-    DataStateNotifier<List<Employee>>,
-    DataState<List<Employee>>,
-    WatchArgs<Employee>>((ref, args) {
-  return ref.watch(employeesRepositoryProvider).watchAllNotifier(
-      remote: args.remote,
-      params: args.params,
-      headers: args.headers,
-      syncLocal: args.syncLocal);
-});
-
-AutoDisposeStateNotifierProvider<DataStateNotifier<List<Employee>>,
-        DataState<List<Employee>>>
-    employeesProvider(
-        {bool? remote,
-        Map<String, dynamic>? params,
-        Map<String, String>? headers,
-        bool? syncLocal}) {
-  return _employeesProvider(WatchArgs(
-      remote: remote, params: params, headers: headers, syncLocal: syncLocal));
-}
 
 extension EmployeeDataX on Employee {
   /// Initializes "fresh" models (i.e. manually instantiated) to use

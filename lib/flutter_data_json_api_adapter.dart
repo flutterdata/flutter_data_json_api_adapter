@@ -73,8 +73,8 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
       map.remove(field);
     }
 
-    // id
-    final id = map.remove('id')!;
+    // id (or generate one)
+    final id = map.remove('id') ?? DataHelpers.generateShortKey();
 
     // attributes: rename with `keyForField`
     final attributes = Map.fromEntries(

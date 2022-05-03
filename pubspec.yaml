@@ -25,6 +25,9 @@ dev_dependencies:
   riverpod: ^1.0.0
   test: ^1.17.8
 
-# dependency_overrides:
-#   flutter_data:
-#     path: ../flutter_data
+dependency_overrides:
+  flutter_data:
+    # path: ../flutter_data
+    git:
+      url: https://github.com/flutterdata/flutter_data
+      ref: dd8b16902a79b8b817f39794d7d318c0bd6d667f

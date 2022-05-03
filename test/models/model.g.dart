@@ -53,69 +53,20 @@ mixin $ModelLocalAdapter on LocalAdapter<Model> {
   Map<String, dynamic> serialize(model) => _$ModelToJson(model);
 }
 
+final _modelsFinders = <String, dynamic>{};
+
 // ignore: must_be_immutable
 class $ModelHiveLocalAdapter = HiveLocalAdapter<Model> with $ModelLocalAdapter;
 
 class $ModelRemoteAdapter = RemoteAdapter<Model>
     with JSONAPIAdapter<Model>, TestMixin<Model>;
 
-//
-
-final modelsLocalAdapterProvider =
-    Provider<LocalAdapter<Model>>((ref) => $ModelHiveLocalAdapter(ref.read));
-
-final modelsRemoteAdapterProvider = Provider<RemoteAdapter<Model>>((ref) =>
-    $ModelRemoteAdapter(
-        ref.watch(modelsLocalAdapterProvider), modelProvider, modelsProvider));
+final internalModelsRemoteAdapterProvider = Provider<RemoteAdapter<Model>>(
+    (ref) => $ModelRemoteAdapter(
+        $ModelHiveLocalAdapter(ref.read), InternalHolder(_modelsFinders)));
 
 final modelsRepositoryProvider =
     Provider<Repository<Model>>((ref) => Repository<Model>(ref.read));
-
-final _modelProvider = StateNotifierProvider.autoDispose
-    .family<DataStateNotifier<Model?>, DataState<Model?>, WatchArgs<Model>>(
-        (ref, args) {
-  return ref.watch(modelsRepositoryProvider).watchOneNotifier(args.id,
-      remote: args.remote,
-      params: args.params,
-      headers: args.headers,
-      alsoWatch: args.alsoWatch);
-});
-
-AutoDisposeStateNotifierProvider<DataStateNotifier<Model?>, DataState<Model?>>
-    modelProvider(dynamic id,
-        {bool? remote,
-        Map<String, dynamic>? params,
-        Map<String, String>? headers,
-        AlsoWatch<Model>? alsoWatch}) {
-  return _modelProvider(WatchArgs(
-      id: id,
-      remote: remote,
-      params: params,
-      headers: headers,
-      alsoWatch: alsoWatch));
-}
-
-final _modelsProvider = StateNotifierProvider.autoDispose.family<
-    DataStateNotifier<List<Model>>,
-    DataState<List<Model>>,
-    WatchArgs<Model>>((ref, args) {
-  return ref.watch(modelsRepositoryProvider).watchAllNotifier(
-      remote: args.remote,
-      params: args.params,
-      headers: args.headers,
-      syncLocal: args.syncLocal);
-});
-
-AutoDisposeStateNotifierProvider<DataStateNotifier<List<Model>>,
-        DataState<List<Model>>>
-    modelsProvider(
-        {bool? remote,
-        Map<String, dynamic>? params,
-        Map<String, String>? headers,
-        bool? syncLocal}) {
-  return _modelsProvider(WatchArgs(
-      remote: remote, params: params, headers: headers, syncLocal: syncLocal));
-}
 
 extension ModelDataX on Model {
   /// Initializes "fresh" models (i.e. manually instantiated) to use
