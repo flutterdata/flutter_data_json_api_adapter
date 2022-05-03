@@ -82,7 +82,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     );
 
     // assemble type, id, attributes, relationships in `Resource`
-    final resource = Resource(internalType, id.toString());
+    final resource = Resource(_typeFor(internalType), id.toString());
     resource.attributes.addAll(attributes);
     resource.relationships.addAll(relationships);
 

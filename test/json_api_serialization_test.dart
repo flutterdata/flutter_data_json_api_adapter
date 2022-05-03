@@ -42,6 +42,20 @@ void main() async {
     });
   });
 
+  test('serialize with different type', () {
+    final employee = Employee(id: '3', name: 'Willy');
+
+    final map = container.employees.remoteAdapter.serialize(employee);
+
+    expect(map, {
+      'data': {
+        'type': 'workers',
+        'id': '3',
+        'attributes': {'name': 'Willy'}
+      }
+    });
+  });
+
   test('serialize with belongs to', () {
     final person = Model(
         id: '23',
