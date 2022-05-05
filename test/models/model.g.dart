@@ -3,25 +3,6 @@
 part of 'model.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-Model _$ModelFromJson(Map<String, dynamic> json) => Model(
-      id: json['id'] as String?,
-      name: json['name'] as String?,
-      company: json['company'] == null
-          ? null
-          : BelongsTo<Company>.fromJson(
-              json['company'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$ModelToJson(Model instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'company': instance.company,
-    };
-
-// **************************************************************************
 // RepositoryGenerator
 // **************************************************************************
 
@@ -41,16 +22,15 @@ mixin $ModelLocalAdapter on LocalAdapter<Model> {
 
   @override
   Model deserialize(map) {
-    for (final key in relationshipsFor().keys) {
-      map[key] = {
-        '_': [map[key], !map.containsKey(key)],
-      };
-    }
+    map = transformDeserialize(map);
     return _$ModelFromJson(map);
   }
 
   @override
-  Map<String, dynamic> serialize(model) => _$ModelToJson(model);
+  Map<String, dynamic> serialize(model, {bool withRelationships = true}) {
+    final map = _$ModelToJson(model);
+    return transformSerialize(map, withRelationships: withRelationships);
+  }
 }
 
 final _modelsFinders = <String, dynamic>{};
@@ -68,21 +48,27 @@ final internalModelsRemoteAdapterProvider = Provider<RemoteAdapter<Model>>(
 final modelsRepositoryProvider =
     Provider<Repository<Model>>((ref) => Repository<Model>(ref.read));
 
-extension ModelDataX on Model {
-  /// Initializes "fresh" models (i.e. manually instantiated) to use
-  /// [save], [delete] and so on.
-  ///
-  /// Can be obtained via `ref.read`, `container.read`
-  Model init(Reader read, {bool save = true}) {
-    final repository = internalLocatorFn(modelsRepositoryProvider, read);
-    final updatedModel =
-        repository.remoteAdapter.initializeModel(this, save: save);
-    return save ? updatedModel : this;
-  }
-}
-
 extension ModelDataRepositoryX on Repository<Model> {
   JSONAPIAdapter<Model> get jSONAPIAdapter =>
       remoteAdapter as JSONAPIAdapter<Model>;
   TestMixin<Model> get testMixin => remoteAdapter as TestMixin<Model>;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Model _$ModelFromJson(Map<String, dynamic> json) => Model(
+      id: json['id'] as String?,
+      name: json['name'] as String?,
+      company: json['company'] == null
+          ? null
+          : BelongsTo<Company>.fromJson(
+              json['company'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$ModelToJson(Model instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'company': instance.company,
+    };

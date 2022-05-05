@@ -9,7 +9,7 @@ part 'employee.g.dart';
 
 @freezed
 @DataRepository([JSONAPIAdapter, TestMixin, EmployeeMixin])
-class Employee with DataModel<Employee>, _$Employee {
+class Employee extends DataModel<Employee> with _$Employee {
   Employee._();
   factory Employee({
     required String id,

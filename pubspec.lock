@@ -194,8 +194,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: dd8b16902a79b8b817f39794d7d318c0bd6d667f
-      resolved-ref: dd8b16902a79b8b817f39794d7d318c0bd6d667f
+      ref: "5d280417af2474be9a4eeee7ce3c58c525319e42"
+      resolved-ref: "5d280417af2474be9a4eeee7ce3c58c525319e42"
       url: "https://github.com/flutterdata/flutter_data"
     source: git
     version: "1.3.4"
@@ -396,7 +396,7 @@ packages:
     source: hosted
     version: "1.0.0"
   recase:
-    dependency: "direct dev"
+    dependency: transitive
     description:
       name: recase
       url: "https://pub.dartlang.org"

@@ -3,20 +3,6 @@
 part of 'city.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-_$_City _$$_CityFromJson(Map<String, dynamic> json) => _$_City(
-      id: json['id'] as String,
-      name: json['name'] as String,
-    );
-
-Map<String, dynamic> _$$_CityToJson(_$_City instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-    };
-
-// **************************************************************************
 // RepositoryGenerator
 // **************************************************************************
 
@@ -28,16 +14,15 @@ mixin $CityLocalAdapter on LocalAdapter<City> {
 
   @override
   City deserialize(map) {
-    for (final key in relationshipsFor().keys) {
-      map[key] = {
-        '_': [map[key], !map.containsKey(key)],
-      };
-    }
+    map = transformDeserialize(map);
     return City.fromJson(map);
   }
 
   @override
-  Map<String, dynamic> serialize(model) => model.toJson();
+  Map<String, dynamic> serialize(model, {bool withRelationships = true}) {
+    final map = model.toJson();
+    return transformSerialize(map, withRelationships: withRelationships);
+  }
 }
 
 final _citiesFinders = <String, dynamic>{};
@@ -55,21 +40,22 @@ final internalCitiesRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
 final citiesRepositoryProvider =
     Provider<Repository<City>>((ref) => Repository<City>(ref.read));
 
-extension CityDataX on City {
-  /// Initializes "fresh" models (i.e. manually instantiated) to use
-  /// [save], [delete] and so on.
-  ///
-  /// Can be obtained via `ref.read`, `container.read`
-  City init(Reader read, {bool save = true}) {
-    final repository = internalLocatorFn(citiesRepositoryProvider, read);
-    final updatedModel =
-        repository.remoteAdapter.initializeModel(this, save: save);
-    return save ? updatedModel : this;
-  }
-}
-
 extension CityDataRepositoryX on Repository<City> {
   JSONAPIAdapter<City> get jSONAPIAdapter =>
       remoteAdapter as JSONAPIAdapter<City>;
   TestMixin<City> get testMixin => remoteAdapter as TestMixin<City>;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$_City _$$_CityFromJson(Map<String, dynamic> json) => _$_City(
+      id: json['id'] as String,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$$_CityToJson(_$_City instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };

@@ -38,12 +38,6 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         };
   }
 
-  @override
-  String keyForField(String field) => field;
-
-  @override
-  String fieldForKey(String key) => key;
-
   /// Transforms native format into JSON:API
   @override
   Map<String, dynamic> serialize(final T model) {
@@ -53,24 +47,22 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     final relationships = <String, Relationship>{};
 
     for (final relEntry in localAdapter.relationshipsFor(model).entries) {
-      final field = relEntry.key;
+      final key = relEntry.key;
       final _type = _typeFor(relEntry.value['type'] as String);
-      final key = keyForField(field);
+      final rel = relEntry.value['instance'];
 
-      if (map[field] is HasMany) {
-        final identifiers =
-            (map[field] as HasMany).where((m) => m.id != null).toSet().map((m) {
-          return Identifier(_type, m.id!.toString());
+      if (rel is HasMany) {
+        final identifiers = (map[key] as Iterable<String>).map((id) {
+          return Identifier(_type, id);
         }).toList();
         relationships[key] = ToMany(identifiers);
       }
-      if (map[field] is BelongsTo) {
-        if (map[field].value?.id != null) {
-          relationships[key] =
-              ToOne(Identifier(_type, map[field].value.id.toString()));
+      if (rel is BelongsTo) {
+        if (map[key] != null) {
+          relationships[key] = ToOne(Identifier(_type, map[key].toString()));
         }
       }
-      map.remove(field);
+      map.remove(key);
     }
 
     // id
@@ -78,7 +70,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
     // attributes: rename with `keyForField`
     final attributes = Map.fromEntries(
-      map.entries.map((e) => MapEntry(keyForField(e.key), e.value)),
+      map.entries.map((e) => MapEntry(e.key, e.value)),
     );
 
     // assemble type, id, attributes, relationships in `Resource`
@@ -139,7 +131,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
       for (final relEntry in (resource.relationships).entries) {
         final rel = relEntry.value;
-        final mapOutKey = fieldForKey(relEntry.key);
+        final mapOutKey = relEntry.key;
 
         if (rel is ToOne && rel.identifier != null) {
           final _internalType = _internalTypeFor(rel.identifier!.type);
@@ -158,11 +150,10 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
       }
 
       for (final attrEntry in resource.attributes.entries) {
-        mapOut[fieldForKey(attrEntry.key)] = attrEntry.value;
+        mapOut[attrEntry.key] = attrEntry.value;
       }
 
       final model = localAdapter.deserialize(mapOut);
-      initializeModel(model, key: key, save: true);
       result.models.add(model);
     }
 

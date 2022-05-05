@@ -53,8 +53,7 @@ mixin _$Company {
   String get name => throw _privateConstructorUsedError;
   String? get nasdaq => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
-  HasMany<Model>? get models =>
-      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  HasMany<Model>? get models => throw _privateConstructorUsedError;
   @JsonKey(name: 'w')
   HasMany<Employee>? get employees => throw _privateConstructorUsedError;
 
@@ -184,7 +183,8 @@ class __$CompanyCopyWithImpl<$Res> extends _$CompanyCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
+@JsonSerializable(fieldRename: FieldRename.snake)
 class _$_Company extends _Company {
   _$_Company(
       {this.id,
@@ -208,7 +208,7 @@ class _$_Company extends _Company {
   final DateTime? updatedAt;
   @override
   final HasMany<Model>? models;
-  @override // ignore: invalid_annotation_target
+  @override
   @JsonKey(name: 'w')
   final HasMany<Employee>? employees;
 
@@ -273,7 +273,7 @@ abstract class _Company extends Company {
   DateTime? get updatedAt;
   @override
   HasMany<Model>? get models;
-  @override // ignore: invalid_annotation_target
+  @override
   @JsonKey(name: 'w')
   HasMany<Employee>? get employees;
   @override

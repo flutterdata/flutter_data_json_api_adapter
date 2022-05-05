@@ -3,21 +3,6 @@
 part of 'employee.dart';
 
 // **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-_$_Employee _$$_EmployeeFromJson(Map<String, dynamic> json) => _$_Employee(
-      id: json['id'] as String,
-      name: json['name'] as String,
-    );
-
-Map<String, dynamic> _$$_EmployeeToJson(_$_Employee instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-    };
-
-// **************************************************************************
 // RepositoryGenerator
 // **************************************************************************
 
@@ -29,16 +14,15 @@ mixin $EmployeeLocalAdapter on LocalAdapter<Employee> {
 
   @override
   Employee deserialize(map) {
-    for (final key in relationshipsFor().keys) {
-      map[key] = {
-        '_': [map[key], !map.containsKey(key)],
-      };
-    }
+    map = transformDeserialize(map);
     return Employee.fromJson(map);
   }
 
   @override
-  Map<String, dynamic> serialize(model) => model.toJson();
+  Map<String, dynamic> serialize(model, {bool withRelationships = true}) {
+    final map = model.toJson();
+    return transformSerialize(map, withRelationships: withRelationships);
+  }
 }
 
 final _employeesFinders = <String, dynamic>{};
@@ -58,22 +42,24 @@ final internalEmployeesRemoteAdapterProvider =
 final employeesRepositoryProvider =
     Provider<Repository<Employee>>((ref) => Repository<Employee>(ref.read));
 
-extension EmployeeDataX on Employee {
-  /// Initializes "fresh" models (i.e. manually instantiated) to use
-  /// [save], [delete] and so on.
-  ///
-  /// Can be obtained via `ref.read`, `container.read`
-  Employee init(Reader read, {bool save = true}) {
-    final repository = internalLocatorFn(employeesRepositoryProvider, read);
-    final updatedModel =
-        repository.remoteAdapter.initializeModel(this, save: save);
-    return save ? updatedModel : this;
-  }
-}
-
 extension EmployeeDataRepositoryX on Repository<Employee> {
   JSONAPIAdapter<Employee> get jSONAPIAdapter =>
       remoteAdapter as JSONAPIAdapter<Employee>;
   TestMixin<Employee> get testMixin => remoteAdapter as TestMixin<Employee>;
   EmployeeMixin get employeeMixin => remoteAdapter as EmployeeMixin;
 }
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$_Employee _$$_EmployeeFromJson(Map<String, dynamic> json) => _$_Employee(
+      id: json['id'] as String,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$$_EmployeeToJson(_$_Employee instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };

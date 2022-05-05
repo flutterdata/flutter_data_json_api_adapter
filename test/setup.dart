@@ -31,16 +31,16 @@ void setUpFn() async {
     'employees': container.read(internalEmployeesRemoteAdapterProvider),
   };
 
-  await container
+  internalRepositories['models'] = await container
       .read(modelsRepositoryProvider)
       .initialize(remote: false, adapters: adapterGraph);
-  await container
+  internalRepositories['companies'] = await container
       .read(companiesRepositoryProvider)
       .initialize(remote: false, adapters: adapterGraph);
-  await container
+  internalRepositories['cities'] = await container
       .read(citiesRepositoryProvider)
       .initialize(remote: false, adapters: adapterGraph);
-  await container
+  internalRepositories['employees'] = await container
       .read(employeesRepositoryProvider)
       .initialize(remote: false, adapters: adapterGraph);
 }

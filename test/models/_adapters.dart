@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_data/flutter_data.dart';
-import 'package:recase/recase.dart';
 
 mixin TestMixin<T extends DataModel<T>> on RemoteAdapter<T> {
   @override
@@ -20,12 +19,4 @@ mixin TestMixin<T extends DataModel<T>> on RemoteAdapter<T> {
   Future<T?> loginTest(T model) async {
     return null;
   }
-}
-
-mixin CaseMixin<T extends DataModel<T>> on RemoteAdapter<T> {
-  @override
-  String fieldForKey(String key) => ReCase(key).camelCase;
-
-  @override
-  String keyForField(String field) => ReCase(field).snakeCase;
 }

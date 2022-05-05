@@ -9,7 +9,7 @@ part 'model.g.dart';
 
 @JsonSerializable()
 @DataRepository([JSONAPIAdapter, TestMixin])
-class Model with DataModel<Model> {
+class Model extends DataModel<Model> {
   @override
   final String? id;
   final String? name;

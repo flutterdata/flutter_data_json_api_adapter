@@ -162,10 +162,6 @@ void main() async {
           .having((m) => m.name, 'name', 'Ka')
           .having((m) => m.id, 'id', '1'),
     );
-
-    // check rel type - we can't check the ID as it's graph-based
-    // ignore: invalid_use_of_protected_member
-    expect(model.company!.internalType, 'companies');
   });
 
   test(
@@ -235,12 +231,6 @@ void main() async {
               DateTime.parse('2020-12-12 12:00'))
           .having((m) => m.id, 'id', '19'),
     );
-
-    // check rel type - we can't check IDs as it's graph-based
-    // ignore: invalid_use_of_protected_member
-    expect(company.models!.internalType, 'models');
-    // ignore: invalid_use_of_protected_member
-    expect(company.employees!.internalType, 'employees');
 
     expect(models, [
       isA<Model>(),
