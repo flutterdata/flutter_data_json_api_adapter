@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.6.0]
+
+- Upgrade FD and adjust
+
 ## [0.5.0]
 
 - Upgrade dependencies to latest

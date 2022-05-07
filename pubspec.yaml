@@ -1,6 +1,6 @@
 name: flutter_data_json_api_adapter
 description: JSON:API adapter for Flutter Data
-version: 0.5.0
+version: 0.6.0
 homepage: https://github.com/flutterdata/flutter_data_json_api_adapter
 
 environment:
@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   collection: ^1.15.0
-  flutter_data: ^1.1.0
+  flutter_data: ^2.0.0-rc1
   json_api: ^5.0.4
 
 dev_dependencies:
@@ -24,9 +24,6 @@ dev_dependencies:
   riverpod: ^1.0.0
   test: ^1.17.8
 
-dependency_overrides:
-  flutter_data:
-    # path: ../flutter_data
-    git:
-      url: https://github.com/flutterdata/flutter_data
-      ref: 5d280417af2474be9a4eeee7ce3c58c525319e42
+# dependency_overrides:
+#   flutter_data:
+#     path: ../flutter_data

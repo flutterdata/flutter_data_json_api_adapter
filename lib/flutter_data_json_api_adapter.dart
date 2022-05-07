@@ -41,26 +41,22 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   /// Transforms native format into JSON:API
   @override
   Map<String, dynamic> serialize(final T model) {
-    final map = localAdapter.serialize(model).filterNulls;
+    final map = super.serialize(model).filterNulls;
 
     // relationships
     final relationships = <String, Relationship>{};
 
-    for (final relEntry in localAdapter.relationshipsFor(model).entries) {
+    for (final relEntry in localAdapter.relationshipsFor().entries) {
       final key = relEntry.key;
       final _type = _typeFor(relEntry.value['type'] as String);
-      final rel = relEntry.value['instance'];
 
-      if (rel is HasMany) {
+      if (map[key] is Iterable) {
         final identifiers = (map[key] as Iterable<String>).map((id) {
           return Identifier(_type, id);
         }).toList();
         relationships[key] = ToMany(identifiers);
-      }
-      if (rel is BelongsTo) {
-        if (map[key] != null) {
-          relationships[key] = ToOne(Identifier(_type, map[key].toString()));
-        }
+      } else if (map[key] != null) {
+        relationships[key] = ToOne(Identifier(_type, map[key].toString()));
       }
       map.remove(key);
     }
