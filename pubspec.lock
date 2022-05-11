@@ -193,9 +193,11 @@ packages:
   flutter_data:
     dependency: "direct main"
     description:
-      name: flutter_data
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: ff131841afefd22a758e0e5e58ea16ec745b816b
+      resolved-ref: ff131841afefd22a758e0e5e58ea16ec745b816b
+      url: "https://github.com/flutterdata/flutter_data"
+    source: git
     version: "2.0.0-rc1"
   freezed:
     dependency: "direct dev"

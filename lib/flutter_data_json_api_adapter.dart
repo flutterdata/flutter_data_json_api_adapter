@@ -40,8 +40,10 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
   /// Transforms native format into JSON:API
   @override
-  Map<String, dynamic> serialize(final T model) {
-    final map = super.serialize(model).filterNulls;
+  Map<String, dynamic> serialize(T model, {bool withRelationships = true}) {
+    final map = super
+        .serialize(model, withRelationships: withRelationships)
+        .filterNulls;
 
     // relationships
     final relationships = <String, Relationship>{};
