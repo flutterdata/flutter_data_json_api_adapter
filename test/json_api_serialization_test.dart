@@ -118,6 +118,17 @@ void main() async {
         },
       }
     });
+
+    expect(
+        container.companies.remoteAdapter
+            .serialize(c, withRelationships: false),
+        {
+          'data': {
+            'type': 'companies',
+            'id': '1',
+            'attributes': {'name': 'Acme'},
+          }
+        });
   });
 
   test('deserialize multiple', () {
