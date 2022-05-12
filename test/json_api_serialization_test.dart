@@ -10,14 +10,14 @@ import 'setup.dart';
 void main() async {
   setUp(setUpFn);
 
-  test('serialize', () {
+  test('serialize', () async {
     final company = Company(
       id: '23',
       name: 'Ko',
       updatedAt: DateTime.parse('2020-02-02'),
     );
 
-    final map = container.companies.remoteAdapter.serialize(company);
+    final map = await container.companies.remoteAdapter.serialize(company);
 
     expect(map, {
       'data': {
@@ -28,10 +28,10 @@ void main() async {
     });
   });
 
-  test('serialize without ID', () {
+  test('serialize without ID', () async {
     final company = Company(name: 'Tao');
 
-    final map = container.companies.remoteAdapter.serialize(company);
+    final map = await container.companies.remoteAdapter.serialize(company);
 
     expect(map, {
       'data': {
@@ -41,10 +41,10 @@ void main() async {
     });
   });
 
-  test('serialize with different type', () {
+  test('serialize with different type', () async {
     final employee = Employee(id: '3', name: 'Willy');
 
-    final map = container.employees.remoteAdapter.serialize(employee);
+    final map = await container.employees.remoteAdapter.serialize(employee);
 
     expect(map, {
       'data': {
@@ -55,13 +55,13 @@ void main() async {
     });
   });
 
-  test('serialize with belongs to', () {
+  test('serialize with belongs to', () async {
     final person = Model(
         id: '23',
         name: 'Ko',
         company: Company(id: '1', name: 'Co').asBelongsTo);
 
-    expect(container.models.remoteAdapter.serialize(person), {
+    expect(await container.models.remoteAdapter.serialize(person), {
       'data': {
         'type': 'models',
         'id': '23',
@@ -78,7 +78,7 @@ void main() async {
         id: '23', name: 'Ko', company: Company(id: null, name: '').asBelongsTo);
 
     // ignores null relationships
-    expect(container.models.remoteAdapter.serialize(person2), {
+    expect(await container.models.remoteAdapter.serialize(person2), {
       'data': {
         'type': 'models',
         'id': '23',
@@ -87,7 +87,7 @@ void main() async {
     });
   });
 
-  test('serialize with has many', () {
+  test('serialize with has many', () async {
     final c = Company(
         id: '1',
         name: 'Acme',
@@ -98,7 +98,7 @@ void main() async {
           Model(id: '2', name: 'B')
         }.asHasMany);
 
-    expect(container.companies.remoteAdapter.serialize(c), {
+    expect(await container.companies.remoteAdapter.serialize(c), {
       'data': {
         'type': 'companies',
         'id': '1',
@@ -119,20 +119,19 @@ void main() async {
       }
     });
 
-    expect(
-        container.companies.remoteAdapter
-            .serialize(c, withRelationships: false),
-        {
-          'data': {
-            'type': 'companies',
-            'id': '1',
-            'attributes': {'name': 'Acme'},
-          }
-        });
+    final map = await container.companies.remoteAdapter
+        .serialize(c, withRelationships: false);
+    expect(map, {
+      'data': {
+        'type': 'companies',
+        'id': '1',
+        'attributes': {'name': 'Acme'},
+      }
+    });
   });
 
-  test('deserialize multiple', () {
-    final cities = container.cities.remoteAdapter.deserialize({
+  test('deserialize multiple', () async {
+    final data = await container.cities.remoteAdapter.deserialize({
       'data': [
         {
           'type': 'cities',
@@ -145,16 +144,16 @@ void main() async {
           'attributes': {'name': 'Nam'}
         },
       ]
-    }).models;
+    });
 
-    expect(cities, [
+    expect(data.models, [
       City(id: '23', name: 'Ox'),
       City(id: '26', name: 'Nam'),
     ]);
   });
 
-  test('deserialize with belongsto relationship', () {
-    final model = container.models.remoteAdapter.deserialize({
+  test('deserialize with belongsto relationship', () async {
+    final data = await container.models.remoteAdapter.deserialize({
       'data': {
         'type': 'models',
         'id': '1',
@@ -165,10 +164,10 @@ void main() async {
           }
         }
       }
-    }).model!;
+    });
 
     expect(
-      model,
+      data.model,
       isA<Model>()
           .having((m) => m.name, 'name', 'Ka')
           .having((m) => m.id, 'id', '1'),
@@ -177,8 +176,8 @@ void main() async {
 
   test(
       'deserialize with hasmany relationship (and included), fieldForKey override, singular/plural included types',
-      () {
-    final data = container.companies.remoteAdapter.deserialize({
+      () async {
+    final data = await container.companies.remoteAdapter.deserialize({
       'data': {
         'type': 'companies',
         'id': '19',
@@ -252,17 +251,17 @@ void main() async {
     ]);
   });
 
-  test('deserialize with overidden type', () {
-    final model = container.employees.remoteAdapter.deserialize({
+  test('deserialize with overidden type', () async {
+    final data = await container.employees.remoteAdapter.deserialize({
       'data': {
         'type': 'workers',
         'id': '19',
         'attributes': {'name': 'Hector'},
       }
-    }).model;
+    });
 
     expect(
-      model,
+      data.model,
       isA<Employee>()
           .having((m) => m.name, 'name', 'Hector')
           .having((m) => m.id, 'id', '19'),

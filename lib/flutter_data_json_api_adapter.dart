@@ -40,10 +40,11 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
   /// Transforms native format into JSON:API
   @override
-  Map<String, dynamic> serialize(T model, {bool withRelationships = true}) {
-    final map = super
-        .serialize(model, withRelationships: withRelationships)
-        .filterNulls;
+  Future<Map<String, dynamic>> serialize(T model,
+      {bool withRelationships = true}) async {
+    var map =
+        await super.serialize(model, withRelationships: withRelationships);
+    map = map.filterNulls;
 
     // relationships
     final relationships = <String, Relationship>{};
@@ -53,8 +54,8 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
       final _type = _typeFor(relEntry.value['type'] as String);
 
       if (map[key] is Iterable) {
-        final identifiers = (map[key] as Iterable<String>).map((id) {
-          return Identifier(_type, id);
+        final identifiers = (map[key] as Iterable<Object>).map((id) {
+          return Identifier(_type, id.toString());
         }).toList();
         relationships[key] = ToMany(identifiers);
       } else if (map[key] != null) {
@@ -86,7 +87,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
   /// Transforms JSON:API into native format (with included resources)
   @override
-  DeserializedData<T> deserialize(Object? data, {String? key}) {
+  Future<DeserializedData<T>> deserialize(Object? data, {String? key}) async {
     final result = DeserializedData<T>([], included: []);
     final collection = ResourceCollection();
 
@@ -108,9 +109,9 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         for (final e in grouped.entries) {
           final _internalType = e.key;
           if (adapters.containsKey(_internalType)) {
-            final models = adapters[_internalType]!.deserialize(e.value).models
-                as List<DataModel<DataModel>>;
-            result.included.addAll(models);
+            final data = await adapters[_internalType]!.deserialize(e.value);
+            result.included
+                .addAll(List<DataModel<DataModel>>.from(data.models));
           }
         }
       } catch (err, stack) {
