@@ -67,7 +67,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     // id
     final id = map.remove('id');
 
-    // attributes: rename with `keyForField`
+    // attributes
     final attributes = Map.fromEntries(
       map.entries.map((e) => MapEntry(e.key, e.value)),
     );
@@ -133,17 +133,13 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         final mapOutKey = relEntry.key;
 
         if (rel is ToOne && rel.identifier != null) {
-          final _internalType = _internalTypeFor(rel.identifier!.type);
-          final key = graph.getKeyForId(_internalType, rel.identifier!.id,
-              keyIfAbsent: DataHelpers.generateKey(_internalType));
+          final key = rel.identifier!.id;
           mapOut[mapOutKey] = key;
         }
 
         if (rel is ToMany) {
           mapOut[mapOutKey] = rel.map((i) {
-            final _internalType = _internalTypeFor(i.type);
-            return graph.getKeyForId(_internalType, i.id,
-                keyIfAbsent: DataHelpers.generateKey(_internalType));
+            return i.id;
           }).toList();
         }
       }
@@ -152,8 +148,8 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         mapOut[attrEntry.key] = attrEntry.value;
       }
 
-      final model = localAdapter.deserialize(mapOut);
-      result.models.add(model);
+      final data = await super.deserialize(mapOut);
+      result.models.addAll(data.models);
     }
 
     return result;
