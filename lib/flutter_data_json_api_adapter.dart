@@ -49,9 +49,9 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     // relationships
     final relationships = <String, Relationship>{};
 
-    for (final relEntry in localAdapter.relationshipsFor().entries) {
+    for (final relEntry in localAdapter.relationshipMetas.entries) {
       final key = relEntry.key;
-      final _type = _typeFor(relEntry.value['type'] as String);
+      final _type = _typeFor(relEntry.value.type);
 
       if (map[key] is Iterable) {
         final identifiers = (map[key] as Iterable<Object>).map((id) {

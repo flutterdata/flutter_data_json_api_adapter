@@ -6,19 +6,22 @@ part of 'model.dart';
 // RepositoryGenerator
 // **************************************************************************
 
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, duplicate_ignore
 
 mixin $ModelLocalAdapter on LocalAdapter<Model> {
+  static final Map<String, RelationshipMeta> kModelRelationshipMetas = {
+    'company': RelationshipMeta<Company>(
+      name: 'company',
+      inverseName: 'models',
+      type: 'companies',
+      kind: 'BelongsTo',
+      instance: (_) => (_ as Model).company,
+    )
+  };
+
   @override
-  Map<String, Map<String, Object?>> relationshipsFor([Model? model]) => {
-        'company': {
-          'name': 'company',
-          'inverse': 'models',
-          'type': 'companies',
-          'kind': 'BelongsTo',
-          'instance': model?.company
-        }
-      };
+  Map<String, RelationshipMeta> get relationshipMetas =>
+      kModelRelationshipMetas;
 
   @override
   Model deserialize(map) {
@@ -52,6 +55,17 @@ extension ModelDataRepositoryX on Repository<Model> {
   JSONAPIAdapter<Model> get jSONAPIAdapter =>
       remoteAdapter as JSONAPIAdapter<Model>;
   TestMixin<Model> get testMixin => remoteAdapter as TestMixin<Model>;
+}
+
+extension ModelRelationshipGraphNodeX on RelationshipGraphNode<Model> {
+  RelationshipGraphNode<Company> get company {
+    final meta = $ModelLocalAdapter.kModelRelationshipMetas['company']
+        as RelationshipMeta<Company>;
+    if (this is RelationshipMeta) {
+      meta.parent = this as RelationshipMeta;
+    }
+    return meta;
+  }
 }
 
 // **************************************************************************

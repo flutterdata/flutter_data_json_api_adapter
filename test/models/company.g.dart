@@ -6,25 +6,28 @@ part of 'company.dart';
 // RepositoryGenerator
 // **************************************************************************
 
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, duplicate_ignore
 
 mixin $CompanyLocalAdapter on LocalAdapter<Company> {
+  static final Map<String, RelationshipMeta> kCompanyRelationshipMetas = {
+    'models': RelationshipMeta<Model>(
+      name: 'models',
+      inverseName: 'company',
+      type: 'models',
+      kind: 'HasMany',
+      instance: (_) => (_ as Company).models,
+    ),
+    'w': RelationshipMeta<Employee>(
+      name: 'employees',
+      type: 'employees',
+      kind: 'HasMany',
+      instance: (_) => (_ as Company).employees,
+    )
+  };
+
   @override
-  Map<String, Map<String, Object?>> relationshipsFor([Company? model]) => {
-        'models': {
-          'name': 'models',
-          'inverse': 'company',
-          'type': 'models',
-          'kind': 'HasMany',
-          'instance': model?.models
-        },
-        'w': {
-          'name': 'employees',
-          'type': 'employees',
-          'kind': 'HasMany',
-          'instance': model?.employees
-        }
-      };
+  Map<String, RelationshipMeta> get relationshipMetas =>
+      kCompanyRelationshipMetas;
 
   @override
   Company deserialize(map) {
@@ -59,6 +62,26 @@ extension CompanyDataRepositoryX on Repository<Company> {
   JSONAPIAdapter<Company> get jSONAPIAdapter =>
       remoteAdapter as JSONAPIAdapter<Company>;
   TestMixin<Company> get testMixin => remoteAdapter as TestMixin<Company>;
+}
+
+extension CompanyRelationshipGraphNodeX on RelationshipGraphNode<Company> {
+  RelationshipGraphNode<Model> get models {
+    final meta = $CompanyLocalAdapter.kCompanyRelationshipMetas['models']
+        as RelationshipMeta<Model>;
+    if (this is RelationshipMeta) {
+      meta.parent = this as RelationshipMeta;
+    }
+    return meta;
+  }
+
+  RelationshipGraphNode<Employee> get employees {
+    final meta = $CompanyLocalAdapter.kCompanyRelationshipMetas['w']
+        as RelationshipMeta<Employee>;
+    if (this is RelationshipMeta) {
+      meta.parent = this as RelationshipMeta;
+    }
+    return meta;
+  }
 }
 
 // **************************************************************************

@@ -6,11 +6,13 @@ part of 'city.dart';
 // RepositoryGenerator
 // **************************************************************************
 
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, duplicate_ignore
 
 mixin $CityLocalAdapter on LocalAdapter<City> {
+  static final Map<String, RelationshipMeta> kCityRelationshipMetas = {};
+
   @override
-  Map<String, Map<String, Object?>> relationshipsFor([City? model]) => {};
+  Map<String, RelationshipMeta> get relationshipMetas => kCityRelationshipMetas;
 
   @override
   City deserialize(map) {
@@ -45,6 +47,8 @@ extension CityDataRepositoryX on Repository<City> {
       remoteAdapter as JSONAPIAdapter<City>;
   TestMixin<City> get testMixin => remoteAdapter as TestMixin<City>;
 }
+
+extension CityRelationshipGraphNodeX on RelationshipGraphNode<City> {}
 
 // **************************************************************************
 // JsonSerializableGenerator

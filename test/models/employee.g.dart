@@ -6,11 +6,14 @@ part of 'employee.dart';
 // RepositoryGenerator
 // **************************************************************************
 
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member, non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, duplicate_ignore
 
 mixin $EmployeeLocalAdapter on LocalAdapter<Employee> {
+  static final Map<String, RelationshipMeta> kEmployeeRelationshipMetas = {};
+
   @override
-  Map<String, Map<String, Object?>> relationshipsFor([Employee? model]) => {};
+  Map<String, RelationshipMeta> get relationshipMetas =>
+      kEmployeeRelationshipMetas;
 
   @override
   Employee deserialize(map) {
@@ -48,6 +51,8 @@ extension EmployeeDataRepositoryX on Repository<Employee> {
   TestMixin<Employee> get testMixin => remoteAdapter as TestMixin<Employee>;
   EmployeeMixin get employeeMixin => remoteAdapter as EmployeeMixin;
 }
+
+extension EmployeeRelationshipGraphNodeX on RelationshipGraphNode<Employee> {}
 
 // **************************************************************************
 // JsonSerializableGenerator

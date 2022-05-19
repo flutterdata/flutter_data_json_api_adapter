@@ -29,4 +29,4 @@ dependency_overrides:
     # path: ../flutter_data
     git:
       url: https://github.com/flutterdata/flutter_data
-      ref: ffc3f6d6818fad7d4e153a939e426156505ef535
+      ref: 54feeb07d43220e9288c40761eee4d69fa5729ef
