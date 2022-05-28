@@ -12,30 +12,11 @@ part of 'city.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 City _$CityFromJson(Map<String, dynamic> json) {
   return _City.fromJson(json);
 }
-
-/// @nodoc
-class _$CityTearOff {
-  const _$CityTearOff();
-
-  _City call({required String id, required String name}) {
-    return _City(
-      id: id,
-      name: name,
-    );
-  }
-
-  City fromJson(Map<String, Object?> json) {
-    return City.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $City = _$CityTearOff();
 
 /// @nodoc
 mixin _$City {
@@ -81,28 +62,28 @@ class _$CityCopyWithImpl<$Res> implements $CityCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$CityCopyWith<$Res> implements $CityCopyWith<$Res> {
-  factory _$CityCopyWith(_City value, $Res Function(_City) then) =
-      __$CityCopyWithImpl<$Res>;
+abstract class _$$_CityCopyWith<$Res> implements $CityCopyWith<$Res> {
+  factory _$$_CityCopyWith(_$_City value, $Res Function(_$_City) then) =
+      __$$_CityCopyWithImpl<$Res>;
   @override
   $Res call({String id, String name});
 }
 
 /// @nodoc
-class __$CityCopyWithImpl<$Res> extends _$CityCopyWithImpl<$Res>
-    implements _$CityCopyWith<$Res> {
-  __$CityCopyWithImpl(_City _value, $Res Function(_City) _then)
-      : super(_value, (v) => _then(v as _City));
+class __$$_CityCopyWithImpl<$Res> extends _$CityCopyWithImpl<$Res>
+    implements _$$_CityCopyWith<$Res> {
+  __$$_CityCopyWithImpl(_$_City _value, $Res Function(_$_City) _then)
+      : super(_value, (v) => _then(v as _$_City));
 
   @override
-  _City get _value => super._value as _City;
+  _$_City get _value => super._value as _$_City;
 
   @override
   $Res call({
     Object? id = freezed,
     Object? name = freezed,
   }) {
-    return _then(_City(
+    return _then(_$_City(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -136,11 +117,12 @@ class _$_City extends _City {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _City &&
+            other is _$_City &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -149,8 +131,8 @@ class _$_City extends _City {
 
   @JsonKey(ignore: true)
   @override
-  _$CityCopyWith<_City> get copyWith =>
-      __$CityCopyWithImpl<_City>(this, _$identity);
+  _$$_CityCopyWith<_$_City> get copyWith =>
+      __$$_CityCopyWithImpl<_$_City>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -159,16 +141,17 @@ class _$_City extends _City {
 }
 
 abstract class _City extends City {
-  factory _City({required String id, required String name}) = _$_City;
+  factory _City({required final String id, required final String name}) =
+      _$_City;
   _City._() : super._();
 
   factory _City.fromJson(Map<String, dynamic> json) = _$_City.fromJson;
 
   @override
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
-  String get name;
+  String get name => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$CityCopyWith<_City> get copyWith => throw _privateConstructorUsedError;
+  _$$_CityCopyWith<_$_City> get copyWith => throw _privateConstructorUsedError;
 }

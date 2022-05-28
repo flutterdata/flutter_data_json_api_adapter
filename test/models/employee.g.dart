@@ -9,11 +9,11 @@ part of 'employee.dart';
 // ignore_for_file: non_constant_identifier_names, duplicate_ignore
 
 mixin $EmployeeLocalAdapter on LocalAdapter<Employee> {
-  static final Map<String, RelationshipMeta> kEmployeeRelationshipMetas = {};
+  static final Map<String, RelationshipMeta> _kEmployeeRelationshipMetas = {};
 
   @override
   Map<String, RelationshipMeta> get relationshipMetas =>
-      kEmployeeRelationshipMetas;
+      _kEmployeeRelationshipMetas;
 
   @override
   Employee deserialize(map) {

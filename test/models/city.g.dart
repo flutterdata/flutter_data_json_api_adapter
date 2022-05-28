@@ -9,10 +9,11 @@ part of 'city.dart';
 // ignore_for_file: non_constant_identifier_names, duplicate_ignore
 
 mixin $CityLocalAdapter on LocalAdapter<City> {
-  static final Map<String, RelationshipMeta> kCityRelationshipMetas = {};
+  static final Map<String, RelationshipMeta> _kCityRelationshipMetas = {};
 
   @override
-  Map<String, RelationshipMeta> get relationshipMetas => kCityRelationshipMetas;
+  Map<String, RelationshipMeta> get relationshipMetas =>
+      _kCityRelationshipMetas;
 
   @override
   City deserialize(map) {

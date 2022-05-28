@@ -12,40 +12,11 @@ part of 'company.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 Company _$CompanyFromJson(Map<String, dynamic> json) {
   return _Company.fromJson(json);
 }
-
-/// @nodoc
-class _$CompanyTearOff {
-  const _$CompanyTearOff();
-
-  _Company call(
-      {String? id,
-      required String name,
-      String? nasdaq,
-      DateTime? updatedAt,
-      HasMany<Model>? models,
-      @JsonKey(name: 'w') HasMany<Employee>? employees}) {
-    return _Company(
-      id: id,
-      name: name,
-      nasdaq: nasdaq,
-      updatedAt: updatedAt,
-      models: models,
-      employees: employees,
-    );
-  }
-
-  Company fromJson(Map<String, Object?> json) {
-    return Company.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $Company = _$CompanyTearOff();
 
 /// @nodoc
 mixin _$Company {
@@ -122,9 +93,10 @@ class _$CompanyCopyWithImpl<$Res> implements $CompanyCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
-  factory _$CompanyCopyWith(_Company value, $Res Function(_Company) then) =
-      __$CompanyCopyWithImpl<$Res>;
+abstract class _$$_CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
+  factory _$$_CompanyCopyWith(
+          _$_Company value, $Res Function(_$_Company) then) =
+      __$$_CompanyCopyWithImpl<$Res>;
   @override
   $Res call(
       {String? id,
@@ -136,13 +108,13 @@ abstract class _$CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$CompanyCopyWithImpl<$Res> extends _$CompanyCopyWithImpl<$Res>
-    implements _$CompanyCopyWith<$Res> {
-  __$CompanyCopyWithImpl(_Company _value, $Res Function(_Company) _then)
-      : super(_value, (v) => _then(v as _Company));
+class __$$_CompanyCopyWithImpl<$Res> extends _$CompanyCopyWithImpl<$Res>
+    implements _$$_CompanyCopyWith<$Res> {
+  __$$_CompanyCopyWithImpl(_$_Company _value, $Res Function(_$_Company) _then)
+      : super(_value, (v) => _then(v as _$_Company));
 
   @override
-  _Company get _value => super._value as _Company;
+  _$_Company get _value => super._value as _$_Company;
 
   @override
   $Res call({
@@ -153,7 +125,7 @@ class __$CompanyCopyWithImpl<$Res> extends _$CompanyCopyWithImpl<$Res>
     Object? models = freezed,
     Object? employees = freezed,
   }) {
-    return _then(_Company(
+    return _then(_$_Company(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -221,7 +193,7 @@ class _$_Company extends _Company {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Company &&
+            other is _$_Company &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name) &&
             const DeepCollectionEquality().equals(other.nasdaq, nasdaq) &&
@@ -230,6 +202,7 @@ class _$_Company extends _Company {
             const DeepCollectionEquality().equals(other.employees, employees));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -242,8 +215,8 @@ class _$_Company extends _Company {
 
   @JsonKey(ignore: true)
   @override
-  _$CompanyCopyWith<_Company> get copyWith =>
-      __$CompanyCopyWithImpl<_Company>(this, _$identity);
+  _$$_CompanyCopyWith<_$_Company> get copyWith =>
+      __$$_CompanyCopyWithImpl<_$_Company>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -253,31 +226,31 @@ class _$_Company extends _Company {
 
 abstract class _Company extends Company {
   factory _Company(
-      {String? id,
-      required String name,
-      String? nasdaq,
-      DateTime? updatedAt,
-      HasMany<Model>? models,
-      @JsonKey(name: 'w') HasMany<Employee>? employees}) = _$_Company;
+      {final String? id,
+      required final String name,
+      final String? nasdaq,
+      final DateTime? updatedAt,
+      final HasMany<Model>? models,
+      @JsonKey(name: 'w') final HasMany<Employee>? employees}) = _$_Company;
   _Company._() : super._();
 
   factory _Company.fromJson(Map<String, dynamic> json) = _$_Company.fromJson;
 
   @override
-  String? get id;
+  String? get id => throw _privateConstructorUsedError;
   @override
-  String get name;
+  String get name => throw _privateConstructorUsedError;
   @override
-  String? get nasdaq;
+  String? get nasdaq => throw _privateConstructorUsedError;
   @override
-  DateTime? get updatedAt;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
   @override
-  HasMany<Model>? get models;
+  HasMany<Model>? get models => throw _privateConstructorUsedError;
   @override
   @JsonKey(name: 'w')
-  HasMany<Employee>? get employees;
+  HasMany<Employee>? get employees => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$CompanyCopyWith<_Company> get copyWith =>
+  _$$_CompanyCopyWith<_$_Company> get copyWith =>
       throw _privateConstructorUsedError;
 }

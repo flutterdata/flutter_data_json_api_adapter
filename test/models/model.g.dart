@@ -9,7 +9,7 @@ part of 'model.dart';
 // ignore_for_file: non_constant_identifier_names, duplicate_ignore
 
 mixin $ModelLocalAdapter on LocalAdapter<Model> {
-  static final Map<String, RelationshipMeta> kModelRelationshipMetas = {
+  static final Map<String, RelationshipMeta> _kModelRelationshipMetas = {
     'company': RelationshipMeta<Company>(
       name: 'company',
       inverseName: 'models',
@@ -21,7 +21,7 @@ mixin $ModelLocalAdapter on LocalAdapter<Model> {
 
   @override
   Map<String, RelationshipMeta> get relationshipMetas =>
-      kModelRelationshipMetas;
+      _kModelRelationshipMetas;
 
   @override
   Model deserialize(map) {
@@ -59,12 +59,10 @@ extension ModelDataRepositoryX on Repository<Model> {
 
 extension ModelRelationshipGraphNodeX on RelationshipGraphNode<Model> {
   RelationshipGraphNode<Company> get company {
-    final meta = $ModelLocalAdapter.kModelRelationshipMetas['company']
+    final meta = $ModelLocalAdapter._kModelRelationshipMetas['company']
         as RelationshipMeta<Company>;
-    if (this is RelationshipMeta) {
-      meta.parent = this as RelationshipMeta;
-    }
-    return meta;
+    return meta.clone(
+        parent: this is RelationshipMeta ? this as RelationshipMeta : null);
   }
 }
 

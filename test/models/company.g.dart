@@ -9,7 +9,7 @@ part of 'company.dart';
 // ignore_for_file: non_constant_identifier_names, duplicate_ignore
 
 mixin $CompanyLocalAdapter on LocalAdapter<Company> {
-  static final Map<String, RelationshipMeta> kCompanyRelationshipMetas = {
+  static final Map<String, RelationshipMeta> _kCompanyRelationshipMetas = {
     'models': RelationshipMeta<Model>(
       name: 'models',
       inverseName: 'company',
@@ -27,7 +27,7 @@ mixin $CompanyLocalAdapter on LocalAdapter<Company> {
 
   @override
   Map<String, RelationshipMeta> get relationshipMetas =>
-      kCompanyRelationshipMetas;
+      _kCompanyRelationshipMetas;
 
   @override
   Company deserialize(map) {
@@ -66,21 +66,17 @@ extension CompanyDataRepositoryX on Repository<Company> {
 
 extension CompanyRelationshipGraphNodeX on RelationshipGraphNode<Company> {
   RelationshipGraphNode<Model> get models {
-    final meta = $CompanyLocalAdapter.kCompanyRelationshipMetas['models']
+    final meta = $CompanyLocalAdapter._kCompanyRelationshipMetas['models']
         as RelationshipMeta<Model>;
-    if (this is RelationshipMeta) {
-      meta.parent = this as RelationshipMeta;
-    }
-    return meta;
+    return meta.clone(
+        parent: this is RelationshipMeta ? this as RelationshipMeta : null);
   }
 
   RelationshipGraphNode<Employee> get employees {
-    final meta = $CompanyLocalAdapter.kCompanyRelationshipMetas['w']
+    final meta = $CompanyLocalAdapter._kCompanyRelationshipMetas['w']
         as RelationshipMeta<Employee>;
-    if (this is RelationshipMeta) {
-      meta.parent = this as RelationshipMeta;
-    }
-    return meta;
+    return meta.clone(
+        parent: this is RelationshipMeta ? this as RelationshipMeta : null);
   }
 }
 

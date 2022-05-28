@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.7.0] - May 28th, 2022
+
+- Call `super.deserialize` to make it overridable
+- Upgrade to async serialization API
+- Upgrade dependencies
+
 ## [0.6.0]
 
 - Upgrade FD and adjust

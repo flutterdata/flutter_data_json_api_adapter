@@ -12,30 +12,11 @@ part of 'employee.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 Employee _$EmployeeFromJson(Map<String, dynamic> json) {
   return _Employee.fromJson(json);
 }
-
-/// @nodoc
-class _$EmployeeTearOff {
-  const _$EmployeeTearOff();
-
-  _Employee call({required String id, required String name}) {
-    return _Employee(
-      id: id,
-      name: name,
-    );
-  }
-
-  Employee fromJson(Map<String, Object?> json) {
-    return Employee.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $Employee = _$EmployeeTearOff();
 
 /// @nodoc
 mixin _$Employee {
@@ -82,28 +63,30 @@ class _$EmployeeCopyWithImpl<$Res> implements $EmployeeCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$EmployeeCopyWith<$Res> implements $EmployeeCopyWith<$Res> {
-  factory _$EmployeeCopyWith(_Employee value, $Res Function(_Employee) then) =
-      __$EmployeeCopyWithImpl<$Res>;
+abstract class _$$_EmployeeCopyWith<$Res> implements $EmployeeCopyWith<$Res> {
+  factory _$$_EmployeeCopyWith(
+          _$_Employee value, $Res Function(_$_Employee) then) =
+      __$$_EmployeeCopyWithImpl<$Res>;
   @override
   $Res call({String id, String name});
 }
 
 /// @nodoc
-class __$EmployeeCopyWithImpl<$Res> extends _$EmployeeCopyWithImpl<$Res>
-    implements _$EmployeeCopyWith<$Res> {
-  __$EmployeeCopyWithImpl(_Employee _value, $Res Function(_Employee) _then)
-      : super(_value, (v) => _then(v as _Employee));
+class __$$_EmployeeCopyWithImpl<$Res> extends _$EmployeeCopyWithImpl<$Res>
+    implements _$$_EmployeeCopyWith<$Res> {
+  __$$_EmployeeCopyWithImpl(
+      _$_Employee _value, $Res Function(_$_Employee) _then)
+      : super(_value, (v) => _then(v as _$_Employee));
 
   @override
-  _Employee get _value => super._value as _Employee;
+  _$_Employee get _value => super._value as _$_Employee;
 
   @override
   $Res call({
     Object? id = freezed,
     Object? name = freezed,
   }) {
-    return _then(_Employee(
+    return _then(_$_Employee(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -138,11 +121,12 @@ class _$_Employee extends _Employee {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _Employee &&
+            other is _$_Employee &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality().equals(other.name, name));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -151,8 +135,8 @@ class _$_Employee extends _Employee {
 
   @JsonKey(ignore: true)
   @override
-  _$EmployeeCopyWith<_Employee> get copyWith =>
-      __$EmployeeCopyWithImpl<_Employee>(this, _$identity);
+  _$$_EmployeeCopyWith<_$_Employee> get copyWith =>
+      __$$_EmployeeCopyWithImpl<_$_Employee>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -161,17 +145,18 @@ class _$_Employee extends _Employee {
 }
 
 abstract class _Employee extends Employee {
-  factory _Employee({required String id, required String name}) = _$_Employee;
+  factory _Employee({required final String id, required final String name}) =
+      _$_Employee;
   _Employee._() : super._();
 
   factory _Employee.fromJson(Map<String, dynamic> json) = _$_Employee.fromJson;
 
   @override
-  String get id;
+  String get id => throw _privateConstructorUsedError;
   @override
-  String get name;
+  String get name => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$EmployeeCopyWith<_Employee> get copyWith =>
+  _$$_EmployeeCopyWith<_$_Employee> get copyWith =>
       throw _privateConstructorUsedError;
 }
