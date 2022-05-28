@@ -51,15 +51,15 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
     for (final relEntry in localAdapter.relationshipMetas.entries) {
       final key = relEntry.key;
-      final _type = _typeFor(relEntry.value.type);
+      final type = _typeFor(relEntry.value.type);
 
       if (map[key] is Iterable) {
         final identifiers = (map[key] as Iterable<Object>).map((id) {
-          return Identifier(_type, id.toString());
+          return Identifier(type, id.toString());
         }).toList();
         relationships[key] = ToMany(identifiers);
       } else if (map[key] != null) {
-        relationships[key] = ToOne(Identifier(_type, map[key].toString()));
+        relationships[key] = ToOne(Identifier(type, map[key].toString()));
       }
       map.remove(key);
     }
@@ -107,9 +107,9 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
             inbound.included(), (r) => _internalTypeFor(r.type));
 
         for (final e in grouped.entries) {
-          final _internalType = e.key;
-          if (adapters.containsKey(_internalType)) {
-            final data = await adapters[_internalType]!.deserialize(e.value);
+          final internalType = e.key;
+          if (adapters.containsKey(internalType)) {
+            final data = await adapters[internalType]!.deserialize(e.value);
             result.included
                 .addAll(List<DataModel<DataModel>>.from(data.models));
           }
@@ -156,15 +156,20 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   }
 
   String _internalTypeFor(String type) {
-    final _a = adapters.values.where((adapter) =>
-        adapter.type == type || adapter.type == DataHelpers.getType(type));
-    return _a.isNotEmpty ? _a.first.internalType : DataHelpers.getType(type);
+    final adapterForType = adapters.values
+        .where((adapter) =>
+            adapter.type == type || adapter.type == DataHelpers.getType(type))
+        // ignore: invalid_use_of_visible_for_testing_member
+        .safeFirst;
+    return adapterForType?.internalType ?? DataHelpers.getType(type);
   }
 
   String _typeFor(String internalType) {
-    final _a = adapters.values
-        .where((adapter) => adapter.internalType == internalType);
-    return _a.isNotEmpty ? _a.first.type : internalType;
+    final adapterForType = adapters.values
+        .where((adapter) => adapter.internalType == internalType)
+        // ignore: invalid_use_of_visible_for_testing_member
+        .safeFirst;
+    return adapterForType?.type ?? internalType;
   }
 }
 
