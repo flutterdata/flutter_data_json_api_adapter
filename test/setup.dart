@@ -18,11 +18,15 @@ void setUpFn() async {
   container = ProviderContainer(
     overrides: [
       hiveProvider.overrideWithValue(HiveFake()),
-      // graphNotifierProvider.overrideWithValue(GraphNotifierMock()),
     ],
   );
 
   await container.read(graphNotifierProvider).initialize();
+
+  DataHelpers.setInternalType<Model>('models');
+  DataHelpers.setInternalType<City>('cities');
+  DataHelpers.setInternalType<Company>('companies');
+  DataHelpers.setInternalType<Employee>('employees');
 
   final adapterGraph = <String, RemoteAdapter<DataModel>>{
     'models': container.read(internalModelsRemoteAdapterProvider),

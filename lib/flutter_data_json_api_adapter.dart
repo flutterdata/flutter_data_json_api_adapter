@@ -158,10 +158,11 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   String _internalTypeFor(String type) {
     final adapterForType = adapters.values
         .where((adapter) =>
-            adapter.type == type || adapter.type == DataHelpers.getType(type))
+            adapter.type == type ||
+            adapter.type == DataHelpers.internalTypeFor(type))
         // ignore: invalid_use_of_visible_for_testing_member
         .safeFirst;
-    return adapterForType?.internalType ?? DataHelpers.getType(type);
+    return adapterForType?.internalType ?? DataHelpers.internalTypeFor(type);
   }
 
   String _typeFor(String internalType) {

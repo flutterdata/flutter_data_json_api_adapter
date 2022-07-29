@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.7.1] - July 29th, 2022
+
+- Upgrade dependencies
+
 ## [0.7.0] - May 28th, 2022
 
 - Call `super.deserialize` to make it overridable
