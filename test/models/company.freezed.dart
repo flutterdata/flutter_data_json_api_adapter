@@ -36,7 +36,8 @@ mixin _$Company {
 /// @nodoc
 abstract class $CompanyCopyWith<$Res> {
   factory $CompanyCopyWith(Company value, $Res Function(Company) then) =
-      _$CompanyCopyWithImpl<$Res>;
+      _$CompanyCopyWithImpl<$Res, Company>;
+  @useResult
   $Res call(
       {String? id,
       String name,
@@ -47,48 +48,51 @@ abstract class $CompanyCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$CompanyCopyWithImpl<$Res> implements $CompanyCopyWith<$Res> {
+class _$CompanyCopyWithImpl<$Res, $Val extends Company>
+    implements $CompanyCopyWith<$Res> {
   _$CompanyCopyWithImpl(this._value, this._then);
 
-  final Company _value;
   // ignore: unused_field
-  final $Res Function(Company) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = freezed,
-    Object? name = freezed,
+    Object? name = null,
     Object? nasdaq = freezed,
     Object? updatedAt = freezed,
     Object? models = freezed,
     Object? employees = freezed,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      nasdaq: nasdaq == freezed
+      nasdaq: freezed == nasdaq
           ? _value.nasdaq
           : nasdaq // ignore: cast_nullable_to_non_nullable
               as String?,
-      updatedAt: updatedAt == freezed
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      models: models == freezed
+      models: freezed == models
           ? _value.models
           : models // ignore: cast_nullable_to_non_nullable
               as HasMany<Model>?,
-      employees: employees == freezed
+      employees: freezed == employees
           ? _value.employees
           : employees // ignore: cast_nullable_to_non_nullable
               as HasMany<Employee>?,
-    ));
+    ) as $Val);
   }
 }
 
@@ -98,6 +102,7 @@ abstract class _$$_CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
           _$_Company value, $Res Function(_$_Company) then) =
       __$$_CompanyCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String? id,
       String name,
@@ -108,45 +113,44 @@ abstract class _$$_CompanyCopyWith<$Res> implements $CompanyCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_CompanyCopyWithImpl<$Res> extends _$CompanyCopyWithImpl<$Res>
+class __$$_CompanyCopyWithImpl<$Res>
+    extends _$CompanyCopyWithImpl<$Res, _$_Company>
     implements _$$_CompanyCopyWith<$Res> {
   __$$_CompanyCopyWithImpl(_$_Company _value, $Res Function(_$_Company) _then)
-      : super(_value, (v) => _then(v as _$_Company));
+      : super(_value, _then);
 
-  @override
-  _$_Company get _value => super._value as _$_Company;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? id = freezed,
-    Object? name = freezed,
+    Object? name = null,
     Object? nasdaq = freezed,
     Object? updatedAt = freezed,
     Object? models = freezed,
     Object? employees = freezed,
   }) {
     return _then(_$_Company(
-      id: id == freezed
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      nasdaq: nasdaq == freezed
+      nasdaq: freezed == nasdaq
           ? _value.nasdaq
           : nasdaq // ignore: cast_nullable_to_non_nullable
               as String?,
-      updatedAt: updatedAt == freezed
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      models: models == freezed
+      models: freezed == models
           ? _value.models
           : models // ignore: cast_nullable_to_non_nullable
               as HasMany<Model>?,
-      employees: employees == freezed
+      employees: freezed == employees
           ? _value.employees
           : employees // ignore: cast_nullable_to_non_nullable
               as HasMany<Employee>?,
@@ -194,33 +198,32 @@ class _$_Company extends _Company {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Company &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.name, name) &&
-            const DeepCollectionEquality().equals(other.nasdaq, nasdaq) &&
-            const DeepCollectionEquality().equals(other.updatedAt, updatedAt) &&
-            const DeepCollectionEquality().equals(other.models, models) &&
-            const DeepCollectionEquality().equals(other.employees, employees));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.nasdaq, nasdaq) || other.nasdaq == nasdaq) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.models, models) || other.models == models) &&
+            (identical(other.employees, employees) ||
+                other.employees == employees));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(name),
-      const DeepCollectionEquality().hash(nasdaq),
-      const DeepCollectionEquality().hash(updatedAt),
-      const DeepCollectionEquality().hash(models),
-      const DeepCollectionEquality().hash(employees));
+  int get hashCode =>
+      Object.hash(runtimeType, id, name, nasdaq, updatedAt, models, employees);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_CompanyCopyWith<_$_Company> get copyWith =>
       __$$_CompanyCopyWithImpl<_$_Company>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CompanyToJson(this);
+    return _$$_CompanyToJson(
+      this,
+    );
   }
 }
 
@@ -237,18 +240,18 @@ abstract class _Company extends Company {
   factory _Company.fromJson(Map<String, dynamic> json) = _$_Company.fromJson;
 
   @override
-  String? get id => throw _privateConstructorUsedError;
+  String? get id;
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
-  String? get nasdaq => throw _privateConstructorUsedError;
+  String? get nasdaq;
   @override
-  DateTime? get updatedAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt;
   @override
-  HasMany<Model>? get models => throw _privateConstructorUsedError;
+  HasMany<Model>? get models;
   @override
   @JsonKey(name: 'w')
-  HasMany<Employee>? get employees => throw _privateConstructorUsedError;
+  HasMany<Employee>? get employees;
   @override
   @JsonKey(ignore: true)
   _$$_CompanyCopyWith<_$_Company> get copyWith =>

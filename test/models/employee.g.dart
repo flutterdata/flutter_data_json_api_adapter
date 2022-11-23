@@ -39,11 +39,10 @@ class $EmployeeRemoteAdapter = RemoteAdapter<Employee>
 
 final internalEmployeesRemoteAdapterProvider =
     Provider<RemoteAdapter<Employee>>((ref) => $EmployeeRemoteAdapter(
-        $EmployeeHiveLocalAdapter(ref.read),
-        InternalHolder(_employeesFinders)));
+        $EmployeeHiveLocalAdapter(ref), InternalHolder(_employeesFinders)));
 
 final employeesRepositoryProvider =
-    Provider<Repository<Employee>>((ref) => Repository<Employee>(ref.read));
+    Provider<Repository<Employee>>((ref) => Repository<Employee>(ref));
 
 extension EmployeeDataRepositoryX on Repository<Employee> {
   JSONAPIAdapter<Employee> get jSONAPIAdapter =>

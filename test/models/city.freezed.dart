@@ -31,33 +31,37 @@ mixin _$City {
 /// @nodoc
 abstract class $CityCopyWith<$Res> {
   factory $CityCopyWith(City value, $Res Function(City) then) =
-      _$CityCopyWithImpl<$Res>;
+      _$CityCopyWithImpl<$Res, City>;
+  @useResult
   $Res call({String id, String name});
 }
 
 /// @nodoc
-class _$CityCopyWithImpl<$Res> implements $CityCopyWith<$Res> {
+class _$CityCopyWithImpl<$Res, $Val extends City>
+    implements $CityCopyWith<$Res> {
   _$CityCopyWithImpl(this._value, this._then);
 
-  final City _value;
   // ignore: unused_field
-  final $Res Function(City) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
+    Object? id = null,
+    Object? name = null,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ) as $Val);
   }
 }
 
@@ -66,29 +70,28 @@ abstract class _$$_CityCopyWith<$Res> implements $CityCopyWith<$Res> {
   factory _$$_CityCopyWith(_$_City value, $Res Function(_$_City) then) =
       __$$_CityCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({String id, String name});
 }
 
 /// @nodoc
-class __$$_CityCopyWithImpl<$Res> extends _$CityCopyWithImpl<$Res>
+class __$$_CityCopyWithImpl<$Res> extends _$CityCopyWithImpl<$Res, _$_City>
     implements _$$_CityCopyWith<$Res> {
   __$$_CityCopyWithImpl(_$_City _value, $Res Function(_$_City) _then)
-      : super(_value, (v) => _then(v as _$_City));
+      : super(_value, _then);
 
-  @override
-  _$_City get _value => super._value as _$_City;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
+    Object? id = null,
+    Object? name = null,
   }) {
     return _then(_$_City(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
@@ -118,25 +121,25 @@ class _$_City extends _City {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_City &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.name, name));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(name));
+  int get hashCode => Object.hash(runtimeType, id, name);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_CityCopyWith<_$_City> get copyWith =>
       __$$_CityCopyWithImpl<_$_City>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_CityToJson(this);
+    return _$$_CityToJson(
+      this,
+    );
   }
 }
 
@@ -148,9 +151,9 @@ abstract class _City extends City {
   factory _City.fromJson(Map<String, dynamic> json) = _$_City.fromJson;
 
   @override
-  String get id => throw _privateConstructorUsedError;
+  String get id;
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
   @JsonKey(ignore: true)
   _$$_CityCopyWith<_$_City> get copyWith => throw _privateConstructorUsedError;

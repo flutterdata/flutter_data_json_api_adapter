@@ -32,33 +32,37 @@ mixin _$Employee {
 /// @nodoc
 abstract class $EmployeeCopyWith<$Res> {
   factory $EmployeeCopyWith(Employee value, $Res Function(Employee) then) =
-      _$EmployeeCopyWithImpl<$Res>;
+      _$EmployeeCopyWithImpl<$Res, Employee>;
+  @useResult
   $Res call({String id, String name});
 }
 
 /// @nodoc
-class _$EmployeeCopyWithImpl<$Res> implements $EmployeeCopyWith<$Res> {
+class _$EmployeeCopyWithImpl<$Res, $Val extends Employee>
+    implements $EmployeeCopyWith<$Res> {
   _$EmployeeCopyWithImpl(this._value, this._then);
 
-  final Employee _value;
   // ignore: unused_field
-  final $Res Function(Employee) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
+    Object? id = null,
+    Object? name = null,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ) as $Val);
   }
 }
 
@@ -68,30 +72,30 @@ abstract class _$$_EmployeeCopyWith<$Res> implements $EmployeeCopyWith<$Res> {
           _$_Employee value, $Res Function(_$_Employee) then) =
       __$$_EmployeeCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({String id, String name});
 }
 
 /// @nodoc
-class __$$_EmployeeCopyWithImpl<$Res> extends _$EmployeeCopyWithImpl<$Res>
+class __$$_EmployeeCopyWithImpl<$Res>
+    extends _$EmployeeCopyWithImpl<$Res, _$_Employee>
     implements _$$_EmployeeCopyWith<$Res> {
   __$$_EmployeeCopyWithImpl(
       _$_Employee _value, $Res Function(_$_Employee) _then)
-      : super(_value, (v) => _then(v as _$_Employee));
+      : super(_value, _then);
 
-  @override
-  _$_Employee get _value => super._value as _$_Employee;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
+    Object? id = null,
+    Object? name = null,
   }) {
     return _then(_$_Employee(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
@@ -122,25 +126,25 @@ class _$_Employee extends _Employee {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Employee &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.name, name));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(name));
+  int get hashCode => Object.hash(runtimeType, id, name);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_EmployeeCopyWith<_$_Employee> get copyWith =>
       __$$_EmployeeCopyWithImpl<_$_Employee>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EmployeeToJson(this);
+    return _$$_EmployeeToJson(
+      this,
+    );
   }
 }
 
@@ -152,9 +156,9 @@ abstract class _Employee extends Employee {
   factory _Employee.fromJson(Map<String, dynamic> json) = _$_Employee.fromJson;
 
   @override
-  String get id => throw _privateConstructorUsedError;
+  String get id;
   @override
-  String get name => throw _privateConstructorUsedError;
+  String get name;
   @override
   @JsonKey(ignore: true)
   _$$_EmployeeCopyWith<_$_Employee> get copyWith =>

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [0.8.0] - November 22nd, 2022
+
+- Upgrade dependencies
+
 ## [0.7.1] - July 29th, 2022
 
 - Upgrade dependencies

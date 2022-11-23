@@ -38,10 +38,10 @@ class $CityRemoteAdapter = RemoteAdapter<City>
 
 final internalCitiesRemoteAdapterProvider = Provider<RemoteAdapter<City>>(
     (ref) => $CityRemoteAdapter(
-        $CityHiveLocalAdapter(ref.read), InternalHolder(_citiesFinders)));
+        $CityHiveLocalAdapter(ref), InternalHolder(_citiesFinders)));
 
 final citiesRepositoryProvider =
-    Provider<Repository<City>>((ref) => Repository<City>(ref.read));
+    Provider<Repository<City>>((ref) => Repository<City>(ref));
 
 extension CityDataRepositoryX on Repository<City> {
   JSONAPIAdapter<City> get jSONAPIAdapter =>

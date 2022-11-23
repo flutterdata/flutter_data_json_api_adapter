@@ -53,10 +53,10 @@ class $CompanyRemoteAdapter = RemoteAdapter<Company>
 
 final internalCompaniesRemoteAdapterProvider = Provider<RemoteAdapter<Company>>(
     (ref) => $CompanyRemoteAdapter(
-        $CompanyHiveLocalAdapter(ref.read), InternalHolder(_companiesFinders)));
+        $CompanyHiveLocalAdapter(ref), InternalHolder(_companiesFinders)));
 
 final companiesRepositoryProvider =
-    Provider<Repository<Company>>((ref) => Repository<Company>(ref.read));
+    Provider<Repository<Company>>((ref) => Repository<Company>(ref));
 
 extension CompanyDataRepositoryX on Repository<Company> {
   JSONAPIAdapter<Company> get jSONAPIAdapter =>

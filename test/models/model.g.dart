@@ -46,10 +46,10 @@ class $ModelRemoteAdapter = RemoteAdapter<Model>
 
 final internalModelsRemoteAdapterProvider = Provider<RemoteAdapter<Model>>(
     (ref) => $ModelRemoteAdapter(
-        $ModelHiveLocalAdapter(ref.read), InternalHolder(_modelsFinders)));
+        $ModelHiveLocalAdapter(ref), InternalHolder(_modelsFinders)));
 
 final modelsRepositoryProvider =
-    Provider<Repository<Model>>((ref) => Repository<Model>(ref.read));
+    Provider<Repository<Model>>((ref) => Repository<Model>(ref));
 
 extension ModelDataRepositoryX on Repository<Model> {
   JSONAPIAdapter<Model> get jSONAPIAdapter =>
