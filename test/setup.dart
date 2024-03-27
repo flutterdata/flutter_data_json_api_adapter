@@ -121,6 +121,10 @@ class FakeBox<T> extends Fake implements Box<T> {
   }
 
   @override
+  Future<void> flush() async { }
+
+
+  @override
   Future<void> close() async {
     isOpen = false;
   }
