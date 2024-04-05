@@ -47,7 +47,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     map = map.filterNulls;
 
     // relationships
-    final relationships = <String, Relationship>{};
+    final relationships = <String, NewRelationship>{};
 
     for (final relEntry in localAdapter.relationshipMetas.entries) {
       final key = relEntry.key;
@@ -57,9 +57,9 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         final identifiers = (map[key] as Iterable<Object>).map((id) {
           return Identifier(type, id.toString());
         }).toList();
-        relationships[key] = ToMany(identifiers);
+        relationships[key] = NewToMany(identifiers);
       } else if (map[key] != null) {
-        relationships[key] = ToOne(Identifier(type, map[key].toString()));
+        relationships[key] = NewToOne(Identifier(type, map[key].toString()));
       }
       map.remove(key);
     }
@@ -73,7 +73,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     );
 
     // assemble type, id, attributes, relationships in `Resource`
-    final resource = NewResource(_typeFor(internalType), id?.toString());
+    final resource = NewResource(_typeFor(internalType), id: id?.toString());
     resource.attributes.addAll(attributes);
     resource.relationships.addAll(relationships);
 
@@ -89,7 +89,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   @override
   Future<DeserializedData<T>> deserialize(Object? data, {String? key}) async {
     final result = DeserializedData<T>([], included: []);
-    final collection = ResourceCollection();
+    final collection = <Resource>[];
 
     if (data is! Iterable<Resource>) {
       // if data is not already formatted, parse
