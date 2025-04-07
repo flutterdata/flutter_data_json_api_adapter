@@ -8,8 +8,8 @@ part 'employee.freezed.dart';
 part 'employee.g.dart';
 
 @freezed
-@DataRepository([JSONAPIAdapter, TestMixin, EmployeeMixin])
-class Employee extends DataModel<Employee> with _$Employee {
+@DataAdapter([JSONAPIAdapter, TestMixin, EmployeeMixin])
+class Employee with DataModelMixin<Employee>, _$Employee {
   Employee._();
   factory Employee({
     required String id,
@@ -20,7 +20,7 @@ class Employee extends DataModel<Employee> with _$Employee {
       _$EmployeeFromJson(json);
 }
 
-mixin EmployeeMixin on RemoteAdapter<Employee> {
+mixin EmployeeMixin on Adapter<Employee> {
   @override
   String get type => 'workers';
 }

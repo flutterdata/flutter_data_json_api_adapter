@@ -12,8 +12,8 @@ part 'company.freezed.dart';
 part 'company.g.dart';
 
 @freezed
-@DataRepository([JSONAPIAdapter, TestMixin])
-class Company extends DataModel<Company> with _$Company {
+@DataAdapter([JSONAPIAdapter, TestMixin])
+class Company with DataModelMixin<Company>, _$Company {
   Company._();
 
   @JsonSerializable(fieldRename: FieldRename.snake)
