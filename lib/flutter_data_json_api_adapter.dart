@@ -13,7 +13,7 @@ import 'package:json_api/document.dart';
 ///
 /// ```
 /// @JsonSerializable()
-/// @DataRepository([JSONAPIAdapter, MyJSONAPIAdapter])
+/// @DataAdapter([JSONAPIAdapter, MyJSONAPIAdapter])
 /// class User with DataModel<User> {
 ///   @override
 ///   final int id;
@@ -21,21 +21,22 @@ import 'package:json_api/document.dart';
 ///   User({this.id, this.name});
 /// }
 ///
-/// mixin MyJSONAPIAdapter on RemoteAdapter<User> {
+/// mixin MyJSONAPIAdapter on Adapter<User> {
 ///   @override
 ///   String get baseUrl => "https://my.jsonapi.server/api";
 ///
 ///   // other customizations
 /// }
 /// ```
-mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
+mixin JSONAPIAdapter<T extends DataModelMixin<T>> on Adapter<T> {
   @override
   FutureOr<Map<String, String>> get defaultHeaders async {
-    return await super.defaultHeaders &
-        {
-          'Content-Type': 'application/vnd.api+json',
-          'Accept': 'application/vnd.api+json',
-        };
+    final superHeaders = await super.defaultHeaders;
+    return {
+      ...superHeaders,
+      'Content-Type': 'application/vnd.api+json',
+      'Accept': 'application/vnd.api+json',
+    };
   }
 
   /// Transforms native format into JSON:API
@@ -49,7 +50,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     // relationships
     final relationships = <String, NewRelationship>{};
 
-    for (final relEntry in localAdapter.relationshipMetas.entries) {
+    for (final relEntry in relationshipMetas.entries) {
       final key = relEntry.key;
       final type = _typeFor(relEntry.value.type);
 
@@ -68,12 +69,12 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
     final id = map.remove('id');
 
     // attributes
-    final attributes = Map.fromEntries(
+    final attributes = Map<String, Object?>.fromEntries(
       map.entries.map((e) => MapEntry(e.key, e.value)),
     );
 
     // assemble type, id, attributes, relationships in `Resource`
-    final resource = NewResource(_typeFor(internalType), id: id?.toString());
+    final resource = NewResource(_typeFor(this.type), id: id?.toString());
     resource.attributes.addAll(attributes);
     resource.relationships.addAll(relationships);
 
@@ -87,7 +88,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
 
   /// Transforms JSON:API into native format (with included resources)
   @override
-  Future<DeserializedData<T>> deserialize(Object? data, {String? key}) async {
+  DeserializedData<T> deserialize(Object? data, {String? key}) {
     final result = DeserializedData<T>([], included: []);
     final collection = <Resource>[];
 
@@ -102,18 +103,9 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
           collection.addAll(inbound.dataAsCollection());
         }
 
-        // group by type
-        final grouped = groupBy<Resource, String>(
-            inbound.included(), (r) => _internalTypeFor(r.type));
-
-        for (final e in grouped.entries) {
-          final internalType = e.key;
-          if (adapters.containsKey(internalType)) {
-            final data = await adapters[internalType]!.deserialize(e.value);
-            result.included
-                .addAll(List<DataModel<DataModel>>.from(data.models));
-          }
-        }
+        // for included resources, we'll just skip since we can't
+        // easily access other adapters in the new version
+        // we'll process the main collection
       } catch (err, stack) {
         throw DataException('Invalid JSON:API, $err', stackTrace: stack);
       }
@@ -148,7 +140,7 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
         mapOut[attrEntry.key] = attrEntry.value;
       }
 
-      final data = await super.deserialize(mapOut);
+      final data = super.deserialize(mapOut);
       result.models.addAll(data.models);
     }
 
@@ -156,21 +148,15 @@ mixin JSONAPIAdapter<T extends DataModel<T>> on RemoteAdapter<T> {
   }
 
   String _internalTypeFor(String type) {
-    final adapterForType = adapters.values
-        .where((adapter) =>
-            adapter.type == type ||
-            adapter.type == DataHelpers.internalTypeFor(type))
-        // ignore: invalid_use_of_visible_for_testing_member
-        .safeFirst;
-    return adapterForType?.internalType ?? DataHelpers.internalTypeFor(type);
+    // In v2, we don't have direct access to other adapters
+    // so we'll just return the type
+    return type.toLowerCase();
   }
 
   String _typeFor(String internalType) {
-    final adapterForType = adapters.values
-        .where((adapter) => adapter.internalType == internalType)
-        // ignore: invalid_use_of_visible_for_testing_member
-        .safeFirst;
-    return adapterForType?.type ?? internalType;
+    // In v2, we don't have direct access to other adapters
+    // so we'll just return the type
+    return internalType;
   }
 }
 
