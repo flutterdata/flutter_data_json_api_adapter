@@ -14,55 +14,121 @@ import 'models/model.dart';
 
 late ProviderContainer container;
 
+// Simple implementation for testing
+class SimpleFakeAdapter<T extends DataModelMixin<T>> implements Adapter<T> {
+  final String _type;
+  
+  SimpleFakeAdapter(this._type);
+  
+  @override
+  String get type => _type;
+  
+  @override
+  Map<String, RelationshipMeta> get relationshipMetas => {};
+  
+  @override
+  T deserializeLocal(Map<String, dynamic> map, {String? key}) {
+    throw UnimplementedError('Not implemented for test');
+  }
+  
+  @override
+  Map<String, dynamic> serializeLocal(T model, {bool withRelationships = true}) {
+    throw UnimplementedError('Not implemented for test');
+  }
+  
+  @override
+  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+// Provider definitions for model adapters
+final modelAdapterProvider = Provider<Adapter<Model>>((ref) => 
+    SimpleFakeAdapter<Model>('models'));
+final cityAdapterProvider = Provider<Adapter<City>>((ref) => 
+    SimpleFakeAdapter<City>('cities'));
+final companyAdapterProvider = Provider<Adapter<Company>>((ref) => 
+    SimpleFakeAdapter<Company>('companies'));
+final employeeAdapterProvider = Provider<Adapter<Employee>>((ref) => 
+    SimpleFakeAdapter<Employee>('workers'));
+
 void setUpFn() async {
+  // Initialize a container with fake storage
   container = ProviderContainer(
     overrides: [
-      hiveProvider.overrideWithValue(HiveFake()),
+      localStorageProvider.overrideWithValue(SimpleFakeStorage()),
     ],
   );
-
-  await container.read(graphNotifierProvider).initialize();
-
-  DataHelpers.setInternalType<Model>('models');
-  DataHelpers.setInternalType<City>('cities');
-  DataHelpers.setInternalType<Company>('companies');
-  DataHelpers.setInternalType<Employee>('employees');
-
-  final adapterGraph = <String, RemoteAdapter<DataModel>>{
-    'models': container.read(internalModelsRemoteAdapterProvider),
-    'cities': container.read(internalCitiesRemoteAdapterProvider),
-    'companies': container.read(internalCompaniesRemoteAdapterProvider),
-    'employees': container.read(internalEmployeesRemoteAdapterProvider),
-  };
-
-  internalRepositories['models'] = await container
-      .read(modelsRepositoryProvider)
-      .initialize(remote: false, adapters: adapterGraph);
-  internalRepositories['companies'] = await container
-      .read(companiesRepositoryProvider)
-      .initialize(remote: false, adapters: adapterGraph);
-  internalRepositories['cities'] = await container
-      .read(citiesRepositoryProvider)
-      .initialize(remote: false, adapters: adapterGraph);
-  internalRepositories['employees'] = await container
-      .read(employeesRepositoryProvider)
-      .initialize(remote: false, adapters: adapterGraph);
 }
 
-// home baked watcher
-E _watch<E>(ProviderListenable<E> provider) {
-  return container.readProviderElement(provider as ProviderBase<E>).readSelf();
-}
-
+// Helper extension for tests
 extension ProviderContainerX on ProviderContainer {
-  Repository<Model> get models =>
-      _watch(modelsRepositoryProvider)..remoteAdapter.internalWatch = _watch;
-  Repository<City> get cities =>
-      _watch(citiesRepositoryProvider)..remoteAdapter.internalWatch = _watch;
-  Repository<Company> get companies =>
-      _watch(companiesRepositoryProvider)..remoteAdapter.internalWatch = _watch;
-  Repository<Employee> get employees =>
-      _watch(employeesRepositoryProvider)..remoteAdapter.internalWatch = _watch;
+  Adapter<Model> get models => read(modelAdapterProvider);
+  Adapter<City> get cities => read(cityAdapterProvider);
+  Adapter<Company> get companies => read(companyAdapterProvider);
+  Adapter<Employee> get employees => read(employeeAdapterProvider);
+}
+
+// Simple storage for tests
+class SimpleFakeStorage implements LocalStorage {
+  final _storage = <String, Map<String, Map<String, dynamic>>>{};
+  bool isDisposed = false;
+  
+  @override
+  String Function() get baseDirFn => () => '/fake/path';
+  
+  @override
+  int get busyTimeout => 5000;
+  
+  @override
+  final LocalStorageClearStrategy clear = LocalStorageClearStrategy.whenError;
+  
+  @override
+  Future<LocalStorage> initialize({bool inIsolate = false}) async {
+    return this;
+  }
+  
+  @override
+  Future<void> clearAll() async {
+    _storage.clear();
+  }
+  
+  @override
+  Future<void> clearType(String type) async {
+    _storage.remove(type);
+  }
+  
+  @override
+  Future<void> delete(String type, String key) async {
+    _storage[type]?.remove(key);
+  }
+  
+  @override
+  Map<String, dynamic>? get(String type, String key) {
+    return _storage[type]?[key];
+  }
+  
+  @override
+  Iterable<String> getKeys(String type) {
+    return _storage[type]?.keys ?? [];
+  }
+  
+  @override
+  Future<void> put(String type, String key, Map<String, dynamic> value) async {
+    _storage.putIfAbsent(type, () => {});
+    _storage[type]![key] = value;
+  }
+  
+  @override
+  Future<void> dispose() async {
+    isDisposed = true;
+  }
+  
+  @override
+  Future<void> destroy() async {
+    await clearAll();
+  }
+  
+  @override
+  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 // hive fakes

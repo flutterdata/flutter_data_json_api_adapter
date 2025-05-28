@@ -8,8 +8,8 @@ import 'company.dart';
 part 'model.g.dart';
 
 @JsonSerializable()
-@DataRepository([JSONAPIAdapter, TestMixin])
-class Model extends DataModel<Model> {
+@DataAdapter([JSONAPIAdapter, TestMixin])
+class Model with DataModelMixin<Model> {
   @override
   final String? id;
   final String? name;

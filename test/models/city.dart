@@ -8,9 +8,10 @@ part 'city.freezed.dart';
 part 'city.g.dart';
 
 @freezed
-@DataRepository([JSONAPIAdapter, TestMixin])
-class City extends DataModel<City> with _$City {
+@DataAdapter([JSONAPIAdapter, TestMixin])
+class City with DataModelMixin<City>, _$City {
   City._();
+
   factory City({
     required String id,
     required String name,

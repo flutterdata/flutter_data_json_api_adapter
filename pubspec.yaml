@@ -8,8 +8,8 @@ environment:
 
 dependencies:
   collection: ^1.15.0
-  flutter_data: ^1.6.0
-  json_api: ^7.0.0
+  flutter_data: ^2.0.0
+  json_api: ^8.1.0
 
 # dependency_overrides:
 #   flutter_data:
@@ -18,13 +18,13 @@ dependencies:
 dev_dependencies:
   build_runner: ^2.0.4
   build_test: ^2.1.0
-  freezed: ^2.4.7
-  freezed_annotation: ^2.4.1
+  freezed: ^3.0.6
+  freezed_annotation: ^3.0.0
   hive: ^2.0.4
   http: ^1.2.0
   json_annotation: ^4.7.0
   json_serializable: ^6.1.4
-  lints: ^3.0.0
+  lints: ^5.1.1
   mockito: ^5.0.10
   riverpod: ^2.5.1
   test: ^1.17.8

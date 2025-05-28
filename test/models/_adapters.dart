@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_data/flutter_data.dart';
 
-mixin TestMixin<T extends DataModel<T>> on RemoteAdapter<T> {
+mixin TestMixin<T extends DataModelMixin<T>> on Adapter<T> {
   @override
   String get baseUrl => 'http://127.0.0.1:17083/';
 
